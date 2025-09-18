@@ -27,6 +27,11 @@ const bookingSchema = new mongoose.Schema({
     required: true,
     unique: true
   },
+  bookingId: {
+    type: Number,
+    required: false,
+    index: true,
+  },
   amount: {
     type: Number,
     required: true,
@@ -41,6 +46,10 @@ const bookingSchema = new mongoose.Schema({
   },
   checkOut: {
     type: Date
+  },
+  paid: {
+    type: Boolean,
+    default: false,
   },
   status: {
     type: String,

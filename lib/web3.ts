@@ -66,3 +66,23 @@ export const getWalletAddress = async (): Promise<string | null> => {
   }
   return null;
 };
+
+export const isMetaMaskAvailable = (): boolean => {
+  return typeof window !== 'undefined' && !!window.ethereum;
+};
+
+// Send a contract transaction with prepared data
+export const sendContractPayment = async (
+  to: string,
+  data: string,
+  valueWei: string
+): Promise<{ hash: string; wait: () => Promise<any> }> => {
+  if (!window.ethereum) {
+    throw new Error('MetaMask not detected');
+  }
+
+  const provider = new ethers.BrowserProvider(window.ethereum);
+  const signer = await provider.getSigner();
+  const tx = await signer.sendTransaction({ to, data, value: BigInt(valueWei) });
+  return tx as any;
+};

@@ -1,11 +1,8 @@
-"use client";
-
-import { useEffect, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
-import { MapPin, Star, Calendar, Users, Wifi, Car } from 'lucide-react';
+import { MapPin, Star, Calendar, Users, Wifi } from 'lucide-react';
 
 interface Target {
   _id: string;
@@ -19,49 +16,26 @@ interface Target {
   duration: string;
 }
 
-export default function TargetDetailPage() {
-  const params = useParams();
-  const router = useRouter();
-  const [target, setTarget] = useState<Target | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    if (params.id) {
-      fetchTarget(params.id as string);
-    }
-  }, [params.id]);
-
-  const fetchTarget = async (id: string) => {
-    try {
-      const response = await fetch(`http://localhost:5000/api/targets/${id}`);
-      const data = await response.json();
-      setTarget(data);
-    } catch (error) {
-      console.error('Error fetching target:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleBookNow = () => {
-    router.push(`/booking/${params.id}`);
-  };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-      </div>
-    );
+export async function generateStaticParams() {
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/targets`);
+    const targets: Target[] = await res.json();
+    return targets.map((t) => ({ id: t._id }));
+  } catch (e) {
+    return [];
   }
+}
 
-  if (!target) {
+export default async function TargetDetailPage({ params }: { params: { id: string } }) {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/targets/${params.id}`, { cache: 'force-cache' });
+  if (!res.ok) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <p className="text-xl text-gray-600">Target not found</p>
       </div>
     );
   }
+  const target: Target = await res.json();
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -138,12 +112,8 @@ export default function TargetDetailPage() {
                   </div>
                 </div>
 
-                <Button 
-                  onClick={handleBookNow}
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 text-lg"
-                  size="lg"
-                >
-                  Book with MetaMask
+                <Button asChild className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 text-lg" size="lg">
+                  <Link href={`/booking/${target._id}`}>Book with MetaMask</Link>
                 </Button>
 
                 <p className="text-sm text-gray-500 text-center mt-4">

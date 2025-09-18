@@ -7,6 +7,8 @@ const dotenv = require('dotenv');
 const targetRoutes = require('./routes/targetRoutes');
 const bookingRoutes = require('./routes/bookingRoutes');
 const authRoutes = require('./routes/authRoutes');
+const pageRoutes = require('./routes/pageRoutes');
+const paymentRoutes = require('./routes/paymentRoutes');
 
 // Import middleware
 const errorHandler = require('./middleware/errorHandler');
@@ -34,6 +36,8 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/tourismo'
 app.use('/api/targets', targetRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/pages', pageRoutes);
+app.use('/api/payment', paymentRoutes);
 
 // Health check route
 app.get('/api/health', (req, res) => {
@@ -46,6 +50,7 @@ app.use(errorHandler);
 // Create default admin user
 const User = require('./models/User');
 const bcrypt = require('bcryptjs');
+const Page = require('./models/Page');
 
 const createDefaultAdmin = async () => {
   try {
@@ -71,13 +76,46 @@ const createDefaultAdmin = async () => {
   };
 }
 
+const createDefaultPages = async () => {
+  try {
+    if (mongoose.connection.readyState !== 1) return;
+
+    const defaults = [
+      {
+        slug: 'about',
+        title: 'About Tourismo',
+        content:
+          'Tourismo is your gateway to discovering breathtaking destinations around the world. We combine modern web technologies with crypto payments to make travel simple and secure.',
+      },
+      {
+        slug: 'contact',
+        title: 'Contact Us',
+        content:
+          'Have questions or feedback? Reach out to our support team at support@tourismo.example and we\'ll be happy to help.',
+      },
+    ];
+
+    for (const p of defaults) {
+      const existing = await Page.findOne({ slug: p.slug });
+      if (!existing) {
+        await Page.create(p);
+        console.log(`Seeded default page: ${p.slug}`);
+      }
+    }
+  } catch (error) {
+    console.error('Error creating default pages:', error);
+  }
+};
+
 // Create admin user after MongoDB connection is established
 mongoose.connection.once('open', () => {
   console.log('MongoDB connection established');
   createDefaultAdmin();
+  createDefaultPages();
 });
 // Start server
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
   createDefaultAdmin();
+  createDefaultPages();
 });

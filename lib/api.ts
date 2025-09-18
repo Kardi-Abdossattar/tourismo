@@ -54,3 +54,23 @@ export const login = (credentials: { username: string; password: string }) =>
     method: 'POST',
     body: JSON.stringify(credentials),
   });
+
+// Pages API calls
+export const getPage = (slug: 'about' | 'contact') => apiRequest(`/pages/${slug}`);
+export const updatePage = (
+  slug: 'about' | 'contact',
+  data: { title: string; content: string }
+) => apiRequest(`/pages/${slug}`, {
+  method: 'PUT',
+  body: JSON.stringify(data),
+});
+
+// Payment API calls
+export const createPayment = (payload: { bookingId: number; amountEth: string }) =>
+  apiRequest('/payment/create', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+
+export const getPaymentStatus = (bookingId: number) =>
+  apiRequest(`/payment/status/${bookingId}`);

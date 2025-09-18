@@ -114,6 +114,18 @@ export default function AdminDashboard() {
           </div>
           <div className="flex space-x-4">
             <Button
+              onClick={() => router.push('/admin/pages')}
+              variant="outline"
+            >
+              Pages
+            </Button>
+            <Button
+              onClick={() => router.push('/admin/bookings')}
+              variant="outline"
+            >
+              Bookings
+            </Button>
+            <Button
               onClick={() => setShowForm(true)}
               className="bg-blue-600 hover:bg-blue-700"
             >
