@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { motion } from 'framer-motion';
 import GridLayout from '@/components/GridLayout';
 import { Button } from '@/components/ui/button';
 import { MapPin, Globe, Star } from 'lucide-react';
@@ -87,23 +88,61 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-emerald-50">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-r from-blue-600 to-emerald-600 text-white">
-        <div className="absolute inset-0 bg-black/20"></div>
-        <div className="relative container mx-auto px-4 py-24 text-center">
-          <h1 className="text-5xl md:text-6xl font-bold mb-6 animate-fade-in">
-            Discover the World with 
-            <span className="text-orange-400"> Tourismo</span>
-          </h1>
-          <p className="text-xl md:text-2xl mb-8 text-blue-100 max-w-3xl mx-auto">
-            Book amazing travel destinations and pay with cryptocurrency. Your adventure awaits!
-          </p>
-          <div className="flex flex-col md:flex-row items-center justify-center gap-3 md:gap-4">
-            <Button onClick={handleExploreClick} size="lg" className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 text-lg">
-              Explore Destinations
-            </Button>
-            <Button onClick={handleTestPayment} variant="outline" size="lg" className="bg-white/10 backdrop-blur border-white/30 text-white">
-              Send Test Payment (0.01 ETH)
-            </Button>
+      <section className="relative h-[80vh] min-h-[560px] w-full overflow-hidden text-white">
+        {/* Cinematic background image with slow zoom */}
+        <motion.img
+          src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=2000&auto=format&fit=crop"
+          alt="Cinematic destination"
+          className="absolute inset-0 w-full h-full object-cover"
+          initial={{ scale: 1.05, opacity: 0.9 }}
+          animate={{ scale: 1.15, opacity: 1 }}
+          transition={{ duration: 18, ease: 'easeOut' }}
+        />
+        {/* Gradient overlays for depth and legibility */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(59,130,246,.35),transparent_35%),radial-gradient(circle_at_80%_90%,rgba(16,185,129,.25),transparent_35%)]" />
+        {/* Content */}
+        <div className="relative z-10 h-full flex items-center">
+          <div className="container mx-auto px-4 text-center">
+            <motion.h1
+              className="text-5xl md:text-6xl font-extrabold tracking-tight mb-6"
+              initial={{ y: 16, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.8, ease: 'easeOut' }}
+            >
+              Discover the World with
+              <span className="text-blue-400"> Tourismo</span>
+            </motion.h1>
+            <motion.p
+              className="text-lg md:text-2xl mb-10 text-blue-100 max-w-3xl mx-auto"
+              initial={{ y: 16, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.9, ease: 'easeOut', delay: 0.1 }}
+            >
+              Premium destinations. Seamless crypto-secured bookings. Travel, elevated.
+            </motion.p>
+            <motion.div
+              className="flex flex-col md:flex-row items-center justify-center gap-3 md:gap-4"
+              initial={{ y: 16, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.9, ease: 'easeOut', delay: 0.2 }}
+            >
+              <Button
+                onClick={handleExploreClick}
+                size="lg"
+                className="px-8 py-3 text-lg bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-600/20"
+              >
+                Explore Destinations
+              </Button>
+              <Button
+                onClick={handleTestPayment}
+                variant="outline"
+                size="lg"
+                className="px-8 py-3 text-lg bg-white/10 hover:bg-white/15 text-white border-white/30 backdrop-blur-md shadow-lg"
+              >
+                Send Test Payment (0.01 ETH)
+              </Button>
+            </motion.div>
           </div>
         </div>
       </section>
