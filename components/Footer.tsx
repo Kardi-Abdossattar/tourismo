@@ -60,13 +60,14 @@ export default function Footer() {
           <div>
             <h3 className="text-lg font-semibold mb-4">Contact Info</h3>
             <div className="space-y-3">
+              <div className="text-gray-200 text-sm font-semibold">Abdossattar Kardi</div>
               <div className="flex items-center space-x-3">
                 <Mail className="w-4 h-4 text-blue-400" />
-                <span className="text-gray-400 text-sm">hello@tourismo.com</span>
+                <span className="text-gray-400 text-sm">kardi.abdossattar.2002@gmail.com</span>
               </div>
               <div className="flex items-center space-x-3">
                 <Phone className="w-4 h-4 text-blue-400" />
-                <span className="text-gray-400 text-sm">+1 (555) 123-4567</span>
+                <span className="text-gray-400 text-sm">+212693255394</span>
               </div>
               <div className="flex space-x-4 mt-4">
                 <Facebook className="w-5 h-5 text-gray-400 hover:text-white cursor-pointer transition-colors" />

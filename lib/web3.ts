@@ -86,3 +86,43 @@ export const sendContractPayment = async (
   const tx = await signer.sendTransaction({ to, data, value: BigInt(valueWei) });
   return tx as any;
 };
+
+// Ensure MetaMask is connected to local Ganache
+export const ensureGanacheNetwork = async () => {
+  if (!window.ethereum) throw new Error('MetaMask not detected');
+  const ganacheChainIdHex = '0x539'; // 1337 in hex
+  try {
+    // Try switching first
+    await window.ethereum.request({
+      method: 'wallet_switchEthereumChain',
+      params: [{ chainId: ganacheChainIdHex }],
+    });
+  } catch (switchError: any) {
+    // If chain not added, add it
+    if (switchError?.code === 4902 || (switchError?.message || '').includes('Unrecognized chain ID')) {
+      await window.ethereum.request({
+        method: 'wallet_addEthereumChain',
+        params: [{
+          chainId: ganacheChainIdHex,
+          chainName: 'Ganache Local',
+          nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+          rpcUrls: ['http://127.0.0.1:7545'],
+          blockExplorerUrls: [],
+        }],
+      });
+    } else {
+      throw switchError;
+    }
+  }
+};
+
+// Send plain ETH to an address with a given amount (in ETH)
+export const sendEth = async (to: string, amountEth: string): Promise<{ hash: string; wait: () => Promise<any> }> => {
+  if (!window.ethereum) throw new Error('MetaMask not detected');
+  await ensureGanacheNetwork();
+  const provider = new ethers.BrowserProvider(window.ethereum);
+  const signer = await provider.getSigner();
+  const value = ethers.parseEther(amountEth);
+  const tx = await signer.sendTransaction({ to, value });
+  return tx as any;
+};
