@@ -4,9 +4,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Slider } from '@/components/ui/slider';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Separator } from '@/components/ui/separator';
-import { Filter, X, Search, DollarSign, Star, Globe, ArrowUpDown, ArrowUp, ArrowDown, Award, Calendar } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Filter, X, Search, DollarSign, Star, Globe, ArrowUpDown, ArrowUp, ArrowDown, Award, Calendar, Plus, Minus } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
 type PriceRange = [number, number];
@@ -98,14 +98,16 @@ export function AttractionFilters({
     onFilterChange(newFilters);
   };
 
-  const toggleCountry = (country: string) => {
-    const newCountries = localFilters.countries.includes(country)
-      ? localFilters.countries.filter(c => c !== country)
-      : [...localFilters.countries, country];
-    
-    const newFilters = { ...localFilters, countries: newCountries };
-    setLocalFilters(newFilters);
-    onFilterChange(newFilters);
+  const handleCountryChange = (country: string) => {
+    if (country === 'all') {
+      const newFilters = { ...localFilters, countries: [] };
+      setLocalFilters(newFilters);
+      onFilterChange(newFilters);
+    } else {
+      const newFilters = { ...localFilters, countries: [country] };
+      setLocalFilters(newFilters);
+      onFilterChange(newFilters);
+    }
   };
 
   const clearFilters = () => {
@@ -116,7 +118,6 @@ export function AttractionFilters({
       countries: [],
       sortBy: 'createdAt',
       sortOrder: 'desc',
-      featured: null,
     };
     setLocalFilters(newFilters);
     onFilterChange(newFilters);
@@ -128,8 +129,7 @@ export function AttractionFilters({
     localFilters.countries.length > 0 ||
     localFilters.priceRange[0] > 0 || 
     localFilters.priceRange[1] < maxPrice ||
-    localFilters.sortBy !== 'createdAt' || localFilters.sortOrder !== 'desc' ||
-    localFilters.featured !== null;
+    localFilters.sortBy !== 'createdAt' || localFilters.sortOrder !== 'desc';
 
   // Don't render anything during SSR to prevent hydration issues
   if (!isMounted) return null;
@@ -154,8 +154,7 @@ export function AttractionFilters({
               localFilters.ratingRange[0] > 0 || localFilters.ratingRange[1] < 5 ? 1 : 0,
               localFilters.countries.length,
               localFilters.priceRange[0] > 0 || localFilters.priceRange[1] < maxPrice ? 1 : 0,
-              localFilters.sortBy !== 'createdAt' || localFilters.sortOrder !== 'desc' ? 1 : 0,
-              localFilters.featured !== null ? 1 : 0
+              localFilters.sortBy !== 'createdAt' || localFilters.sortOrder !== 'desc' ? 1 : 0
             ].reduce((a, b) => a + b, 0)}
           </span>
         )}
@@ -268,19 +267,112 @@ export function AttractionFilters({
                     <DollarSign className="h-4 w-4 mr-2 text-blue-600" />
                     Price Range (ETH)
                   </h5>
-                  <div className="px-2">
-                    <Slider
-                      min={0}
-                      max={maxPrice}
-                      step={0.1}
-                      value={localFilters.priceRange}
-                      onValueChange={handlePriceChange}
-                      minStepsBetweenThumbs={1}
-                      className="py-4"
-                    />
-                    <div className="flex justify-between text-sm text-gray-500 mt-1">
-                      <span>{localFilters.priceRange[0].toFixed(1)} ETH</span>
-                      <span>{localFilters.priceRange[1].toFixed(1)} ETH</span>
+                  <div className="space-y-3">
+                    {/* Min Price Controls */}
+                    <div>
+                      <label className="text-xs text-gray-600 mb-1 block">Minimum Price</label>
+                      <div className="flex items-center space-x-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            const newMin = Math.max(0, localFilters.priceRange[0] - 0.5);
+                            if (newMin < localFilters.priceRange[1]) {
+                              handlePriceChange([newMin, localFilters.priceRange[1]]);
+                            }
+                          }}
+                          className="h-8 w-8 p-0"
+                        >
+                          <Minus className="h-3 w-3" />
+                        </Button>
+                        <Input
+                          type="number"
+                          min="0"
+                          max={localFilters.priceRange[1]}
+                          step="0.1"
+                          value={localFilters.priceRange[0].toFixed(1)}
+                          onChange={(e) => {
+                            const value = parseFloat(e.target.value) || 0;
+                            if (value >= 0 && value < localFilters.priceRange[1]) {
+                              handlePriceChange([value, localFilters.priceRange[1]]);
+                            }
+                          }}
+                          className="h-8 text-center text-sm"
+                        />
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            const newMin = Math.min(maxPrice, localFilters.priceRange[0] + 0.5);
+                            if (newMin < localFilters.priceRange[1]) {
+                              handlePriceChange([newMin, localFilters.priceRange[1]]);
+                            }
+                          }}
+                          className="h-8 w-8 p-0"
+                        >
+                          <Plus className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    </div>
+                    
+                    {/* Max Price Controls */}
+                    <div>
+                      <label className="text-xs text-gray-600 mb-1 block">Maximum Price</label>
+                      <div className="flex items-center space-x-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            const newMax = Math.max(localFilters.priceRange[0] + 0.1, localFilters.priceRange[1] - 0.5);
+                            if (newMax > localFilters.priceRange[0]) {
+                              handlePriceChange([localFilters.priceRange[0], newMax]);
+                            }
+                          }}
+                          className="h-8 w-8 p-0"
+                        >
+                          <Minus className="h-3 w-3" />
+                        </Button>
+                        <Input
+                          type="number"
+                          min={localFilters.priceRange[0]}
+                          max={maxPrice}
+                          step="0.1"
+                          value={localFilters.priceRange[1].toFixed(1)}
+                          onChange={(e) => {
+                            const value = parseFloat(e.target.value) || maxPrice;
+                            if (value <= maxPrice && value > localFilters.priceRange[0]) {
+                              handlePriceChange([localFilters.priceRange[0], value]);
+                            }
+                          }}
+                          className="h-8 text-center text-sm"
+                        />
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            const newMax = Math.min(maxPrice, localFilters.priceRange[1] + 0.5);
+                            if (newMax > localFilters.priceRange[0]) {
+                              handlePriceChange([localFilters.priceRange[0], newMax]);
+                            }
+                          }}
+                          className="h-8 w-8 p-0"
+                        >
+                          <Plus className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    </div>
+                    
+                    {/* Slider for visual feedback */}
+                    <div className="px-2">
+                      <Slider
+                        min={0}
+                        max={maxPrice}
+                        step={0.1}
+                        value={localFilters.priceRange}
+                        onValueChange={handlePriceChange}
+                        minStepsBetweenThumbs={1}
+                        className="py-2"
+                      />
                     </div>
                   </div>
                 </div>
@@ -293,56 +385,113 @@ export function AttractionFilters({
                     <Star className="h-4 w-4 mr-2 text-yellow-500 fill-yellow-500" />
                     Rating Range
                   </h5>
-                  <div className="px-2">
-                    <Slider
-                      min={0}
-                      max={5}
-                      step={0.1}
-                      value={localFilters.ratingRange}
-                      onValueChange={handleRatingChange}
-                      minStepsBetweenThumbs={1}
-                      className="py-4"
-                    />
-                    <div className="flex justify-between text-sm text-gray-500 mt-1">
-                      <span>{localFilters.ratingRange[0].toFixed(1)} ⭐</span>
-                      <span>{localFilters.ratingRange[1].toFixed(1)} ⭐</span>
+                  <div className="space-y-3">
+                    {/* Min Rating Controls */}
+                    <div>
+                      <label className="text-xs text-gray-600 mb-1 block">Minimum Rating</label>
+                      <div className="flex items-center space-x-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            const newMin = Math.max(0, localFilters.ratingRange[0] - 0.5);
+                            if (newMin < localFilters.ratingRange[1]) {
+                              handleRatingChange([newMin, localFilters.ratingRange[1]]);
+                            }
+                          }}
+                          className="h-8 w-8 p-0"
+                        >
+                          <Minus className="h-3 w-3" />
+                        </Button>
+                        <Input
+                          type="number"
+                          min="0"
+                          max={localFilters.ratingRange[1]}
+                          step="0.1"
+                          value={localFilters.ratingRange[0].toFixed(1)}
+                          onChange={(e) => {
+                            const value = parseFloat(e.target.value) || 0;
+                            if (value >= 0 && value < localFilters.ratingRange[1]) {
+                              handleRatingChange([value, localFilters.ratingRange[1]]);
+                            }
+                          }}
+                          className="h-8 text-center text-sm"
+                        />
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            const newMin = Math.min(5, localFilters.ratingRange[0] + 0.5);
+                            if (newMin < localFilters.ratingRange[1]) {
+                              handleRatingChange([newMin, localFilters.ratingRange[1]]);
+                            }
+                          }}
+                          className="h-8 w-8 p-0"
+                        >
+                          <Plus className="h-3 w-3" />
+                        </Button>
+                      </div>
                     </div>
-                  </div>
-                </div>
-                
-                <Separator />
-                
-                {/* Featured Filter */}
-                <div>
-                  <h5 className="text-sm font-medium mb-2 flex items-center">
-                    <Award className="h-4 w-4 mr-2 text-orange-600" />
-                    Featured Status
-                  </h5>
-                  <div className="flex space-x-2">
-                    <Button
-                      variant={localFilters.featured === null ? 'default' : 'outline'}
-                      size="sm"
-                      className="flex-1"
-                      onClick={() => handleFeaturedChange(null)}
-                    >
-                      All
-                    </Button>
-                    <Button
-                      variant={localFilters.featured === true ? 'default' : 'outline'}
-                      size="sm"
-                      className="flex-1"
-                      onClick={() => handleFeaturedChange(true)}
-                    >
-                      Featured
-                    </Button>
-                    <Button
-                      variant={localFilters.featured === false ? 'default' : 'outline'}
-                      size="sm"
-                      className="flex-1"
-                      onClick={() => handleFeaturedChange(false)}
-                    >
-                      Regular
-                    </Button>
+                    
+                    {/* Max Rating Controls */}
+                    <div>
+                      <label className="text-xs text-gray-600 mb-1 block">Maximum Rating</label>
+                      <div className="flex items-center space-x-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            const newMax = Math.max(localFilters.ratingRange[0] + 0.1, localFilters.ratingRange[1] - 0.5);
+                            if (newMax > localFilters.ratingRange[0]) {
+                              handleRatingChange([localFilters.ratingRange[0], newMax]);
+                            }
+                          }}
+                          className="h-8 w-8 p-0"
+                        >
+                          <Minus className="h-3 w-3" />
+                        </Button>
+                        <Input
+                          type="number"
+                          min={localFilters.ratingRange[0]}
+                          max="5"
+                          step="0.1"
+                          value={localFilters.ratingRange[1].toFixed(1)}
+                          onChange={(e) => {
+                            const value = parseFloat(e.target.value) || 5;
+                            if (value <= 5 && value > localFilters.ratingRange[0]) {
+                              handleRatingChange([localFilters.ratingRange[0], value]);
+                            }
+                          }}
+                          className="h-8 text-center text-sm"
+                        />
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            const newMax = Math.min(5, localFilters.ratingRange[1] + 0.5);
+                            if (newMax > localFilters.ratingRange[0]) {
+                              handleRatingChange([localFilters.ratingRange[0], newMax]);
+                            }
+                          }}
+                          className="h-8 w-8 p-0"
+                        >
+                          <Plus className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    </div>
+                    
+                    {/* Slider for visual feedback */}
+                    <div className="px-2">
+                      <Slider
+                        min={0}
+                        max={5}
+                        step={0.1}
+                        value={localFilters.ratingRange}
+                        onValueChange={handleRatingChange}
+                        minStepsBetweenThumbs={1}
+                        className="py-2"
+                      />
+                    </div>
                   </div>
                 </div>
                 
@@ -354,26 +503,22 @@ export function AttractionFilters({
                     <Globe className="h-4 w-4 mr-2 text-green-600" />
                     Countries
                   </h5>
-                  <div className="max-h-48 overflow-y-auto space-y-2 pr-2">
-                    {allCountries.map((country) => (
-                      <div key={country} className="flex items-center space-x-2">
-                        <Checkbox
-                          id={`country-${country}`}
-                          checked={localFilters.countries.includes(country)}
-                          onCheckedChange={() => toggleCountry(country)}
-                        />
-                        <label
-                          htmlFor={`country-${country}`}
-                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
-                        >
+                  <Select
+                    value={localFilters.countries.length > 0 ? localFilters.countries[0] : 'all'}
+                    onValueChange={handleCountryChange}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select a country" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Countries</SelectItem>
+                      {allCountries.map((country) => (
+                        <SelectItem key={country} value={country}>
                           {country}
-                        </label>
-                      </div>
-                    ))}
-                    {allCountries.length === 0 && (
-                      <p className="text-sm text-gray-500">No countries available</p>
-                    )}
-                  </div>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
                 
                 {/* Active filters inside the panel */}
@@ -453,31 +598,13 @@ export function AttractionFilters({
                           </div>
                         )}
                         
-                        {localFilters.featured !== null && (
-                          <div className="inline-flex items-center bg-orange-100 text-xs rounded-full px-2 py-1">
-                            <span className="text-orange-700">
-                              {localFilters.featured ? 'Featured Only' : 'Regular Only'}
-                            </span>
-                            <button 
-                              onClick={() => {
-                                const newFilters = { ...localFilters, featured: null };
-                                setLocalFilters(newFilters);
-                                onFilterChange(newFilters);
-                              }}
-                              className="ml-2 text-orange-500 hover:text-orange-700"
-                            >
-                              <X className="h-3 w-3" />
-                            </button>
-                          </div>
-                        )}
                         
-                        {localFilters.countries.map((country) => (
-                          <div key={country} className="inline-flex items-center bg-green-100 text-xs rounded-full px-2 py-1">
-                            <span className="text-green-700">{country}</span>
+                        {localFilters.countries.length > 0 && (
+                          <div className="inline-flex items-center bg-green-100 text-xs rounded-full px-2 py-1">
+                            <span className="text-green-700">Country: {localFilters.countries[0]}</span>
                             <button 
                               onClick={() => {
-                                const newCountries = localFilters.countries.filter(c => c !== country);
-                                const newFilters = { ...localFilters, countries: newCountries };
+                                const newFilters = { ...localFilters, countries: [] };
                                 setLocalFilters(newFilters);
                                 onFilterChange(newFilters);
                               }}
@@ -486,7 +613,7 @@ export function AttractionFilters({
                               <X className="h-3 w-3" />
                             </button>
                           </div>
-                        ))}
+                        )}
                       </div>
                     </div>
                   </>
