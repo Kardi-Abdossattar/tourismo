@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from 'sonner';
 import AdminForm from '@/components/AdminForm';
 import { Plus, Edit, Trash2, Eye, LogOut } from 'lucide-react';
+import { AttractionFilters, FilterState } from '@/components/AttractionFilters';
 
 interface Target {
   _id: string;
@@ -17,14 +18,26 @@ interface Target {
   image: string;
   location: string;
   rating: number;
+  country?: string;
 }
 
 export default function AdminDashboard() {
   const [targets, setTargets] = useState<Target[]>([]);
+  const [allTargets, setAllTargets] = useState<Target[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingTarget, setEditingTarget] = useState<Target | null>(null);
   const [page, setPage] = useState(1);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [filters, setFilters] = useState<FilterState>({
+    search: '',
+    priceRange: [0, 10],
+    ratingRange: [0, 5],
+    countries: [],
+    sortBy: 'createdAt',
+    sortOrder: 'desc',
+    featured: null,
+  });
   const perPage = 9;
   const router = useRouter();
 
@@ -42,6 +55,7 @@ export default function AdminDashboard() {
 
   const fetchTargets = async () => {
     try {
+      setLoading(true);
       const token = localStorage.getItem('token');
       const response = await fetch('http://localhost:5000/api/targets', {
         headers: {
@@ -51,17 +65,91 @@ export default function AdminDashboard() {
       const data = await response.json();
       
       // Handle both old format (array) and new format (object with targets)
+      let targetsData: Target[] = [];
       if (Array.isArray(data)) {
-        setTargets(data);
+        targetsData = data;
       } else {
-        setTargets(data.targets || []);
+        targetsData = data.targets || [];
       }
+      
+      setAllTargets(targetsData);
+      applyFilters(targetsData, filters);
     } catch (error) {
       console.error('Error fetching targets:', error);
       toast.error('Failed to fetch targets');
     } finally {
       setLoading(false);
     }
+  };
+
+  const applyFilters = (targetsData: Target[], currentFilters: FilterState) => {
+    let result = [...targetsData];
+
+    // Search filter
+    if (currentFilters.search.trim()) {
+      const q = currentFilters.search.trim().toLowerCase();
+      result = result.filter((t) =>
+        [t.title, t.location, t.description, t.country].some((f) => f?.toLowerCase().includes(q))
+      );
+    }
+
+    // Price range filter
+    result = result.filter((t) => 
+      t.price >= currentFilters.priceRange[0] && t.price <= currentFilters.priceRange[1]
+    );
+
+    // Rating range filter
+    result = result.filter((t) => 
+      t.rating >= currentFilters.ratingRange[0] && t.rating <= currentFilters.ratingRange[1]
+    );
+
+    // Country filter
+    if (currentFilters.countries.length > 0) {
+      result = result.filter((t) => 
+        t.country && currentFilters.countries.includes(t.country)
+      );
+    }
+
+    // Sorting
+    result.sort((a, b) => {
+      let aVal: any, bVal: any;
+      
+      switch (currentFilters.sortBy) {
+        case 'title':
+          aVal = a.title.toLowerCase();
+          bVal = b.title.toLowerCase();
+          break;
+        case 'price':
+          aVal = a.price;
+          bVal = b.price;
+          break;
+        case 'rating':
+          aVal = a.rating;
+          bVal = b.rating;
+          break;
+        case 'location':
+          aVal = a.location.toLowerCase();
+          bVal = b.location.toLowerCase();
+          break;
+        case 'createdAt':
+        default:
+          aVal = new Date().getTime(); // Admin doesn't have createdAt, use current time
+          bVal = new Date().getTime();
+          break;
+      }
+      
+      if (aVal < bVal) return currentFilters.sortOrder === 'asc' ? -1 : 1;
+      if (aVal > bVal) return currentFilters.sortOrder === 'asc' ? 1 : -1;
+      return 0;
+    });
+
+    setTargets(result);
+  };
+
+  const handleFilterChange = async (newFilters: FilterState) => {
+    setFilters(newFilters);
+    setPage(1);
+    applyFilters(allTargets, newFilters);
   };
 
   const handleLogout = () => {
@@ -152,17 +240,32 @@ export default function AdminDashboard() {
           <div className="border-t border-gray-200"></div>
         </div>
 
-        {/* Targets Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {(targets || []).slice((page - 1) * perPage, page * perPage).map((target) => (
-            <Card key={target._id} className="overflow-hidden hover:shadow-lg transition-shadow h-full flex flex-col">
-              <div className="aspect-video overflow-hidden">
-                <img
-                  src={target.image}
-                  alt={target.title}
-                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                />
-              </div>
+        {/* Filters and Targets Layout */}
+        <div className={`flex gap-6 items-start transition-all duration-300 ${isFilterOpen ? '' : 'relative'}`}>
+          {/* Advanced Filters - Left Side */}
+          <div className={`${isFilterOpen ? 'flex-shrink-0' : 'absolute top-0 left-0 z-50'}`}>
+            <AttractionFilters
+              onFilterChange={handleFilterChange}
+              allCountries={Array.from(new Set(allTargets.map(t => t.country).filter((country): country is string => Boolean(country)))).sort()}
+              maxPrice={Math.max(...allTargets.map(t => t.price), 10)}
+              onMenuToggle={(isOpen: boolean) => {
+                setIsFilterOpen(isOpen);
+              }}
+            />
+          </div>
+
+          {/* Targets Grid - Right Side */}
+          <div className="flex-1 min-w-0">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {(targets || []).slice((page - 1) * perPage, page * perPage).map((target) => (
+                <Card key={target._id} className="overflow-hidden hover:shadow-lg transition-shadow h-full flex flex-col">
+                  <div className="aspect-video overflow-hidden">
+                    <img
+                      src={target.image}
+                      alt={target.title}
+                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                    />
+                  </div>
               <CardHeader className="flex-grow">
                 <CardTitle className="text-lg">{target.title}</CardTitle>
                 <p className="text-sm text-gray-600">{target.location}</p>
@@ -212,6 +315,8 @@ export default function AdminDashboard() {
               </CardContent>
             </Card>
           ))}
+            </div>
+          </div>
         </div>
 
         {/* Pagination */}
