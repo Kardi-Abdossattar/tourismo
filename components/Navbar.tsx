@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { MapPin, Menu, X, ChevronDown, Mail, Phone, User, Info, Lock, Shield } from 'lucide-react';
+import { MapPin, Menu, X, ChevronDown, Mail, Phone, User, Info, Lock, Shield, Home } from 'lucide-react';
 import { getPage } from '@/lib/api';
 import { toast } from 'sonner';
 
@@ -138,43 +138,51 @@ export default function Navbar({ onDestinationsClick }: NavbarProps) {
   return (
     <>
       <motion.nav 
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-out ${
+        className={`fixed z-50 transition-all duration-500 ease-out ${
           scrolled 
-            ? 'bg-white/95 backdrop-blur-lg shadow-xl border-b border-gray-200' 
-            : 'bg-transparent'
+            ? 'top-0 left-1/4 right-1/4' 
+            : 'top-0 left-0 right-0'
         }`}
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
       >
         <div className={`transition-all duration-500 ease-out ${
-          scrolled ? 'container mx-auto px-4' : 'mx-6 px-6'
+          scrolled 
+            ? 'px-4 py-2' 
+            : 'mx-6 px-6'
         }`}>
-          <div className={`flex justify-between items-center transition-all duration-500 ease-out ${
-            scrolled ? 'h-16' : 'h-20'
-          } ${scrolled ? 'bg-transparent' : 'mt-4 px-6 rounded-2xl bg-white/10 backdrop-blur-md shadow-2xl border border-white/20 hover:bg-white/15'}`}>
-            {/* Logo */}
-            <Link href="/" className="flex items-center space-x-3 group">
-              <div className="p-2 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl group-hover:from-blue-600 group-hover:to-blue-700 transition-all duration-300 shadow-lg">
-                <MapPin className="w-6 h-6 text-white" />
-              </div>
-              <span className={`text-2xl font-bold transition-all duration-500 ${
-                scrolled 
-                  ? 'bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent' 
-                  : 'text-white drop-shadow-lg'
-              }`}>
-                Tourismo
-              </span>
-            </Link>
+          <div className={`flex items-center transition-all duration-500 ease-out ${
+            scrolled 
+              ? 'h-12 justify-center bg-white/95 backdrop-blur-lg shadow-xl rounded-b-2xl border-b border-l border-r border-gray-200/50' 
+              : 'h-20 justify-between mt-4 px-6 rounded-2xl bg-white/10 backdrop-blur-md shadow-2xl border border-white/20 hover:bg-white/15'
+          }`}>
+            
+            {/* Logo - Only show when not scrolled */}
+            {!scrolled && (
+              <Link href="/" className="flex items-center space-x-3 group">
+                <div className="p-2 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl group-hover:from-blue-600 group-hover:to-blue-700 transition-all duration-300 shadow-lg">
+                  <MapPin className="w-6 h-6 text-white" />
+                </div>
+                <span className="text-2xl font-bold text-white drop-shadow-lg">
+                  Tourismo
+                </span>
+              </Link>
+            )}
 
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center space-x-1">
+            {/* Desktop Navigation - Centered layout when scrolled */}
+            <div className={`hidden md:flex items-center ${
+              scrolled 
+                ? 'justify-center w-full space-x-4' 
+                : 'space-x-1'
+            }`}>
               <Button
                 variant="ghost"
-                className={`transition-all duration-300 font-medium px-4 py-2 ${
+                size={scrolled ? "sm" : "default"}
+                className={`transition-all duration-300 font-medium ${
                   scrolled 
-                    ? 'text-gray-700 hover:text-blue-600 hover:bg-blue-50' 
-                    : 'text-white hover:text-blue-200 hover:bg-white/10'
+                    ? 'px-4 py-2 text-gray-800 hover:text-blue-600 hover:bg-blue-50 bg-gray-50/50 rounded-xl shadow-sm border border-gray-200/50' 
+                    : 'px-4 py-2 text-white hover:text-blue-200 hover:bg-white/10'
                 }`}
                 onClick={handleDestinationsClick}
               >
@@ -184,23 +192,34 @@ export default function Navbar({ onDestinationsClick }: NavbarProps) {
               
               <Button
                 variant="ghost"
-                className={`transition-all duration-300 font-medium px-4 py-2 ${
+                size={scrolled ? "sm" : "default"}
+                className={`transition-all duration-300 font-medium ${
                   scrolled 
-                    ? 'text-gray-700 hover:text-blue-600 hover:bg-blue-50' 
-                    : 'text-white hover:text-blue-200 hover:bg-white/10'
+                    ? 'px-4 py-2 text-gray-800 hover:text-blue-600 hover:bg-blue-50 bg-gray-50/50 rounded-xl shadow-sm border border-gray-200/50' 
+                    : 'px-4 py-2 text-white hover:text-blue-200 hover:bg-white/10'
                 }`}
                 onClick={handleAboutClick}
               >
                 <Info className="w-4 h-4 mr-2" />
                 About
               </Button>
+
+              {/* Home Icon - Only show when scrolled, centered between buttons */}
+              {scrolled && (
+                <Link href="/" className="group mx-2">
+                  <div className="p-2.5 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl group-hover:from-blue-600 group-hover:to-blue-700 transition-all duration-300 shadow-md group-hover:scale-110 group-hover:shadow-lg">
+                    <Home className="w-5 h-5 text-white" />
+                  </div>
+                </Link>
+              )}
               
               <Button
                 variant="ghost"
-                className={`transition-all duration-300 font-medium px-4 py-2 ${
+                size={scrolled ? "sm" : "default"}
+                className={`transition-all duration-300 font-medium ${
                   scrolled 
-                    ? 'text-gray-700 hover:text-blue-600 hover:bg-blue-50' 
-                    : 'text-white hover:text-blue-200 hover:bg-white/10'
+                    ? 'px-4 py-2 text-gray-800 hover:text-blue-600 hover:bg-blue-50 bg-gray-50/50 rounded-xl shadow-sm border border-gray-200/50' 
+                    : 'px-4 py-2 text-white hover:text-blue-200 hover:bg-white/10'
                 }`}
                 onClick={handleContactClick}
               >
@@ -208,15 +227,15 @@ export default function Navbar({ onDestinationsClick }: NavbarProps) {
                 Contact
               </Button>
               
-              <div className="ml-4">
+              <div className={scrolled ? '' : 'ml-4'}>
                 <Button 
-                  variant="outline" 
+                  variant="ghost"
                   size="sm"
                   onClick={handleAdminClick}
-                  className={`transition-all duration-300 ${
+                  className={`transition-all duration-300 border ${
                     scrolled 
-                      ? 'border-blue-200 text-blue-600 hover:bg-blue-50 hover:border-blue-300' 
-                      : 'border-white/30 text-white hover:bg-white/10 hover:border-white/50'
+                      ? 'px-4 py-2 border-blue-300 text-blue-700 hover:bg-blue-50 hover:border-blue-400 bg-blue-50/30 rounded-xl shadow-sm' 
+                      : 'border-white/20 text-white hover:bg-white/10 hover:border-white/40 bg-transparent'
                   }`}
                 >
                   <Shield className="w-4 h-4 mr-2" />
@@ -225,17 +244,15 @@ export default function Navbar({ onDestinationsClick }: NavbarProps) {
               </div>
             </div>
 
-            {/* Mobile Menu Button */}
-            <button
-              className={`md:hidden p-2 rounded-lg transition-all duration-300 ${
-                scrolled 
-                  ? 'hover:bg-gray-100 text-gray-700' 
-                  : 'hover:bg-white/10 text-white'
-              }`}
-              onClick={() => setIsOpen(!isOpen)}
-            >
-              {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </button>
+            {/* Mobile Menu Button - Hidden when scrolled */}
+            {!scrolled && (
+              <button
+                className="md:hidden p-2 rounded-lg transition-all duration-300 hover:bg-white/10 text-white"
+                onClick={() => setIsOpen(!isOpen)}
+              >
+                {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              </button>
+            )}
           </div>
 
           {/* Mobile Navigation */}
@@ -294,13 +311,13 @@ export default function Navbar({ onDestinationsClick }: NavbarProps) {
                   
                   <div className="pt-2">
                     <Button 
-                      variant="outline" 
+                      variant="ghost"
                       size="sm" 
                       onClick={handleAdminClick}
-                      className={`w-full transition-all duration-300 ${
+                      className={`w-full transition-all duration-300 border ${
                         scrolled 
-                          ? 'border-blue-200 text-blue-600 hover:bg-blue-50' 
-                          : 'border-white/30 text-white hover:bg-white/10 hover:border-white/50'
+                          ? 'border-blue-200/50 text-blue-600 hover:bg-blue-50 hover:border-blue-300 bg-transparent' 
+                          : 'border-white/20 text-white hover:bg-white/10 hover:border-white/40 bg-transparent'
                       }`}
                     >
                       <Shield className="w-4 h-4 mr-2" />
