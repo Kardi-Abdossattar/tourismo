@@ -1,0 +1,87 @@
+"use client";
+
+import Link from 'next/link';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { MapPin, Star } from 'lucide-react';
+
+interface TargetCardProps {
+  target: {
+    _id: string;
+    title: string;
+    description: string;
+    price: number; // In ETH
+    priceInWei?: string;
+    image: string;
+    country: string;
+    city: string;
+    location: string;
+    rating: number;
+    duration?: string;
+  };
+}
+
+export default function TargetCard({ target }: TargetCardProps) {
+  return (
+    <Card className="group overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
+      <div className="relative aspect-video overflow-hidden">
+        <img
+          src={target.image}
+          alt={target.title}
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+        />
+        {/* Gradient overlay on hover */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+        {/* Rating badge */}
+        <div className="absolute top-4 right-4">
+          <div className="bg-white/90 backdrop-blur-sm px-2 py-1 rounded-full flex items-center space-x-1 shadow-sm">
+            <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+            <span className="text-sm font-medium">{target.rating}</span>
+          </div>
+        </div>
+
+        {/* Price badge */}
+        <div className="absolute bottom-4 left-4">
+          <div className="bg-blue-600/90 text-white backdrop-blur-sm px-3 py-1.5 rounded-full text-sm font-semibold shadow flex flex-col">
+            <span>{target.price.toFixed(4)} ETH</span>
+            {target.priceInWei && (
+              <span className="text-xs font-normal opacity-80">
+                {parseInt(target.priceInWei).toLocaleString()} wei
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* Location chip */}
+        <div className="absolute bottom-4 right-4 hidden sm:block">
+          <div className="bg-white/90 backdrop-blur-sm px-2.5 py-1.5 rounded-full text-sm text-gray-800 shadow flex items-center gap-1.5">
+            <MapPin className="w-4 h-4 text-blue-600" />
+            <div className="flex flex-col">
+              <span className="font-medium">{target.city}</span>
+              <span className="text-xs text-gray-500">{target.country}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <CardContent className="p-6">
+        <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
+          {target.title}
+        </h3>
+        <p className="text-gray-600 text-sm mb-5 line-clamp-2">{target.description}</p>
+        <div className="flex justify-between items-center">
+          <div className="text-sm text-gray-500 flex items-center gap-1">
+            <MapPin className="w-4 h-4" />
+            <span className="truncate max-w-[180px] sm:max-w-[220px]">{target.location}</span>
+          </div>
+          <Link href={`/target/${target._id}`}>
+            <Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-white shadow">
+              View Details
+            </Button>
+          </Link>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}

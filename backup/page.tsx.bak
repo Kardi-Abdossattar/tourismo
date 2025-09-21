@@ -1,0 +1,373 @@
+"use client";
+
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { motion } from 'framer-motion';
+import GridLayout from '@/components/GridLayout';
+import Navbar from '@/components/Navbar';
+import { Button } from '@/components/ui/button';
+import { MapPin, Globe, Star, ArrowUpDown, DollarSign, Building2 } from 'lucide-react';
+import { getTargets } from '@/lib/api';
+import { Input } from '@/components/ui/input';
+import { isMetaMaskAvailable, ensureGanacheNetwork, connectWallet, sendEth } from '@/lib/web3';
+import { toast } from 'sonner';
+import { TargetFilters } from '@/components/TargetFilters';
+import TargetCard from '@/components/TargetCard';
+import { Card } from '@/components/ui/card';
+
+type SortOption = 'price-asc' | 'price-desc' | 'rating-desc' | 'title-asc' | 'title-desc';
+
+interface TargetFiltersProps {
+  search: string;
+  setSearch: (value: string) => void;
+  sortBy: SortOption;
+  setSortBy: (value: SortOption) => void;
+  priceRange: [number, number];
+  setPriceRange: (value: [number, number]) => void;
+  maxPrice: number;
+  selectedLocations: string[];
+  setSelectedLocations: (locations: string[]) => void;
+  allLocations: string[];
+  minRating: number;
+  setMinRating: (value: number) => void;
+  selectedCountry: string;
+  setSelectedCountry: (country: string) => void;
+  selectedCity: string;
+  setSelectedCity: (city: string) => void;
+  clearFilters: () => void;
+}
+
+interface Target {
+  _id: string;
+  title: string;
+  description: string;
+  price: number;
+  priceInWei?: string;
+  image: string;
+  country: string;
+  city: string;
+  location: string;
+  rating: number;
+  duration?: string;
+}
+
+export default function Home() {
+  const [targets, setTargets] = useState<Target[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState('');
+  const [page, setPage] = useState(1);
+  const perPage = 9;
+  const destRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    fetchTargets();
+  }, []);
+
+  const fetchTargets = async () => {
+    try {
+      const data = await getTargets();
+      setTargets(data);
+    } catch (error) {
+      console.error('Error fetching targets:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // State for filters and sorting
+  const [sortBy, setSortBy] = useState<SortOption>('rating-desc');
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 10]);
+  const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
+  const [allLocations, setAllLocations] = useState<string[]>([]);
+  const [minRating, setMinRating] = useState(0);
+  const [maxPrice, setMaxPrice] = useState(10);
+  const [connectedAddress, setConnectedAddress] = useState('');
+  const [selectedCountry, setSelectedCountry] = useState('');
+  const [selectedCity, setSelectedCity] = useState('');
+
+  // Calculate max price for price range slider
+  const maxPriceValue = useMemo(() => {
+    return Math.max(...targets.map(t => t.price), 1000);
+  }, [targets]);
+
+  // Get all unique locations
+  const allLocationsValue = useMemo(() => {
+    const locations = new Set<string>();
+    targets.forEach(target => locations.add(target.location));
+    return Array.from(locations).sort();
+  }, [targets]);
+
+  // Filter and sort targets
+  const filteredTargets = useMemo(() => {
+    return targets.filter(target => {
+      const matchesSearch = target.title.toLowerCase().includes(search.toLowerCase()) ||
+                         target.description.toLowerCase().includes(search.toLowerCase());
+      const matchesPrice = target.price >= priceRange[0] && target.price <= priceRange[1];
+      const matchesLocation = selectedLocations.length === 0 || 
+                           selectedLocations.some(loc => target.location.includes(loc));
+      const matchesRating = target.rating >= minRating;
+      const matchesCountry = !selectedCountry || target.country === selectedCountry;
+      const matchesCity = !selectedCity || target.city === selectedCity;
+      
+      return matchesSearch && matchesPrice && matchesLocation && 
+             matchesRating && matchesCountry && matchesCity;
+    });
+  }, [targets, search, priceRange, selectedLocations, minRating, selectedCountry, selectedCity]);
+
+  // Wrap TargetCard in a div for the grid
+  const renderTargetCard = (target: Target) => (
+    <div key={target._id} className="h-full">
+      <TargetCard target={target} />
+    </div>
+  );
+
+  const renderEmptyState = () => (
+    <div className="col-span-full flex flex-col items-center justify-center py-12 text-center">
+      <Globe className="w-16 h-16 text-gray-300 mb-4" />
+      <h3 className="text-lg font-medium text-gray-900 mb-2">No destinations found</h3>
+      <p className="text-gray-500 max-w-md">
+        {selectedCountry || selectedCity || search || selectedLocations.length > 0 || minRating > 0
+          ? 'Try adjusting your filters to find what you\'re looking for.'
+          : 'No destinations available. Check back later or add a new destination.'}
+      </p>
+      {(selectedCountry || selectedCity || search || selectedLocations.length > 0 || minRating > 0) && (
+        <Button variant="outline" className="mt-4" onClick={clearFilters}>
+          Clear all filters
+        </Button>
+      )}
+    </div>
+  );
+
+  // Clear all filters
+  const clearFilters = () => {
+    setSearch('');
+    setSortBy('rating-desc');
+    setPriceRange([0, maxPrice]);
+    setSelectedLocations([]);
+    setMinRating(0);
+    setSelectedCountry('');
+    setSelectedCity('');
+  };
+
+  // Handle sort change with type safety
+  const handleSortChange = (value: string) => {
+    if (['price-asc', 'price-desc', 'rating-desc', 'title-asc', 'title-desc'].includes(value)) {
+      setSortBy(value as SortOption);
+    } else {
+      setSortBy('rating-desc');
+    }
+  };
+
+  // Paginate filtered list
+  const totalPages = Math.max(1, Math.ceil(filteredTargets.length / perPage));
+  const currentPage = Math.min(page, totalPages);
+  const start = (currentPage - 1) * perPage;
+  const paginated = filteredTargets.slice(start, start + perPage);
+  
+  // Update price range when max price changes
+  useEffect(() => {
+    setPriceRange(prev => [prev[0], Math.max(prev[1], maxPriceValue)]);
+  }, [maxPriceValue]);
+
+  const handleExploreClick = () => {
+    destRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  const handleTestPayment = async () => {
+    try {
+      const FIXED_RECEIVER = '0x2f5Be95f0D697d9b778540B010AfDB26c87C828F';
+      if (!/^0x[a-fA-F0-9]{40}$/.test(FIXED_RECEIVER)) {
+        toast.error('Configured receiver address is invalid. Please update it to a 42-character 0x... address.');
+        return;
+      }
+      if (!isMetaMaskAvailable()) {
+        toast.warning('MetaMask is not installed.');
+        return;
+      }
+      await ensureGanacheNetwork();
+      await connectWallet();
+      const tx = await sendEth(FIXED_RECEIVER, '0.01');
+      toast.message('Transaction sent', { description: tx.hash });
+      await tx.wait();
+      toast.success('Test payment confirmed');
+    } catch (e) {
+      console.error(e);
+      toast.error('Test payment failed');
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-emerald-50">
+      <Navbar onDestinationsClick={handleExploreClick} />
+      {/* Hero Section */}
+      <section className="relative h-[80vh] min-h-[560px] w-full overflow-hidden text-white">
+        {/* Cinematic background image with slow zoom */}
+        <motion.img
+          src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=2000&auto=format&fit=crop"
+          alt="Cinematic destination"
+          className="absolute inset-0 w-full h-full object-cover"
+          initial={{ scale: 1.05, opacity: 0.9 }}
+          animate={{ scale: 1.15, opacity: 1 }}
+          transition={{ duration: 18, ease: 'easeOut' }}
+        />
+        {/* Gradient overlays for depth and legibility */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(59,130,246,.35),transparent_35%),radial-gradient(circle_at_80%_90%,rgba(16,185,129,.25),transparent_35%)]" />
+        {/* Content */}
+        <div className="relative z-10 h-full flex items-center">
+          <div className="container mx-auto px-4 text-center">
+            <motion.h1
+              className="text-5xl md:text-6xl font-extrabold tracking-tight mb-6"
+              initial={{ y: 16, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.8, ease: 'easeOut' }}
+            >
+              Discover the World with
+              <span className="text-blue-400"> Tourismo</span>
+            </motion.h1>
+            <motion.p
+              className="text-lg md:text-2xl mb-10 text-blue-100 max-w-3xl mx-auto"
+              initial={{ y: 16, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.9, ease: 'easeOut', delay: 0.1 }}
+            >
+              Premium destinations. Seamless crypto-secured bookings. Travel, elevated.
+            </motion.p>
+            <motion.div
+              className="flex flex-col md:flex-row items-center justify-center gap-3 md:gap-4"
+              initial={{ y: 16, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.9, ease: 'easeOut', delay: 0.2 }}
+            >
+              <Button
+                onClick={handleExploreClick}
+                size="lg"
+                className="px-8 py-3 text-lg bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-600/20"
+              >
+                Explore Destinations
+              </Button>
+              <Button
+                onClick={handleTestPayment}
+                variant="outline"
+                size="lg"
+                className="px-8 py-3 text-lg bg-white/10 hover:bg-white/15 text-white border-white/30 backdrop-blur-md shadow-lg"
+              >
+                Send Test Payment (0.01 ETH)
+              </Button>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Stats Section */}
+      <section className="py-16 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+            <div className="flex flex-col items-center">
+              <Globe className="w-12 h-12 text-blue-600 mb-4" />
+              <h3 className="text-3xl font-bold text-gray-900 mb-2">150+</h3>
+              <p className="text-gray-600">Destinations</p>
+            </div>
+            <div className="flex flex-col items-center">
+              <Star className="w-12 h-12 text-orange-500 mb-4" />
+              <h3 className="text-3xl font-bold text-gray-900 mb-2">4.9</h3>
+              <p className="text-gray-600">Average Rating</p>
+            </div>
+            <div className="flex flex-col items-center">
+              <MapPin className="w-12 h-12 text-emerald-600 mb-4" />
+              <h3 className="text-3xl font-bold text-gray-900 mb-2">50k+</h3>
+              <p className="text-gray-600">Happy Travelers</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Destinations Grid */}
+      <section className="py-16" ref={destRef}>
+        <div className="container mx-auto px-4 py-12">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+            {/* Filters Sidebar */}
+            <div className="lg:col-span-1">
+              <TargetFilters
+                search={search}
+                setSearch={setSearch}
+                sortBy={sortBy}
+                setSortBy={setSortBy}
+                priceRange={priceRange}
+                setPriceRange={setPriceRange}
+                maxPrice={maxPriceValue}
+                selectedLocations={selectedLocations}
+                setSelectedLocations={setSelectedLocations}
+                allLocations={allLocationsValue}
+                minRating={minRating}
+                setMinRating={setMinRating}
+                selectedCountry={selectedCountry}
+                setSelectedCountry={setSelectedCountry}
+                selectedCity={selectedCity}
+                setSelectedCity={setSelectedCity}
+                clearFilters={clearFilters}
+              />
+            </div>
+
+            {/* Main Content */}
+            <div className="lg:col-span-3">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-2xl font-bold text-gray-900">
+                  {filteredTargets.length} {filteredTargets.length === 1 ? 'Destination' : 'Destinations'} Found
+                </h2>
+                <div className="w-64">
+                  <Input
+                    placeholder="Search destinations..."
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    className="w-full"
+                  />
+                </div>
+              </div>
+
+              {/* Grid */}
+              {loading ? (
+                <div className="col-span-3 text-center py-12">
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
+                  <p className="mt-2 text-gray-600">Loading destinations...</p>
+                </div>
+              ) : paginated.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {paginated.map(renderTargetCard)}
+                </div>
+              ) : (
+                renderEmptyState()
+              )}
+
+              {/* Pagination */}
+              {totalPages > 1 && (
+                <div className="flex justify-center mt-8">
+                  <div className="flex space-x-2">
+                    <Button
+                      variant="outline"
+                      onClick={() => setPage(p => Math.max(1, p - 1))}
+                      disabled={currentPage === 1}
+                    >
+                      Previous
+                    </Button>
+                    <div className="flex items-center px-4">
+                      <span className="text-sm text-gray-700">
+                        Page {currentPage} of {totalPages}
+                      </span>
+                    </div>
+                    <Button
+                      variant="outline"
+                      onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                      disabled={currentPage === totalPages}
+                    >
+                      Next
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}

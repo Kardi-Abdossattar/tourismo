@@ -138,24 +138,20 @@ export default function Navbar({ onDestinationsClick }: NavbarProps) {
   return (
     <>
       <motion.nav 
-        className={`fixed z-50 transition-all duration-500 ease-out ${
-          scrolled 
-            ? 'top-0 left-1/4 right-1/4' 
-            : 'top-0 left-0 right-0'
-        }`}
+        className="fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-out"
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
       >
         <div className={`transition-all duration-500 ease-out ${
           scrolled 
-            ? 'px-4 py-2' 
+            ? 'px-[25%]' 
             : 'mx-6 px-6'
         }`}>
           <div className={`flex items-center transition-all duration-500 ease-out ${
             scrolled 
-              ? 'h-12 justify-center bg-white/95 backdrop-blur-lg shadow-xl rounded-b-2xl border-b border-l border-r border-gray-200/50' 
-              : 'h-20 justify-between mt-4 px-6 rounded-2xl bg-white/10 backdrop-blur-md shadow-2xl border border-white/20 hover:bg-white/15'
+              ? 'h-14 justify-center bg-white/95 backdrop-blur-lg shadow-xl rounded-b-2xl border-b border-l border-r border-gray-200/50' 
+              : 'h-20 justify-between px-6 rounded-2xl bg-white/10 backdrop-blur-md shadow-2xl border border-white/20 hover:bg-white/15 mt-4'
           }`}>
             
             {/* Logo - Only show when not scrolled */}
