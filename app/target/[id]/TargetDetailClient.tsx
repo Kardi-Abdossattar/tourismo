@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { MapPin, Star, Calendar, Users, Wifi } from 'lucide-react';
+import Navbar from '@/components/Navbar';
 
 interface Target {
   _id: string;
@@ -43,6 +44,7 @@ export default function TargetDetailClient({ initialTarget, id }: { initialTarge
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <Navbar />
       <div className="container mx-auto px-4 py-8">
         <div className="relative h-96 md:h-[500px] rounded-2xl overflow-hidden mb-8">
           <img src={target.image} alt={target.title} className="w-full h-full object-cover" />

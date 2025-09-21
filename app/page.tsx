@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import GridLayout from '@/components/GridLayout';
+import Navbar from '@/components/Navbar';
 import { Button } from '@/components/ui/button';
 import { MapPin, Globe, Star } from 'lucide-react';
 import { getTargets } from '@/lib/api';
@@ -87,6 +88,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-emerald-50">
+      <Navbar onDestinationsClick={handleExploreClick} />
       {/* Hero Section */}
       <section className="relative h-[80vh] min-h-[560px] w-full overflow-hidden text-white">
         {/* Cinematic background image with slow zoom */}

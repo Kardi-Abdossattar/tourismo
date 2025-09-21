@@ -9,6 +9,7 @@ import { toast } from 'sonner';
 import { connectWallet, isMetaMaskAvailable, ensureGanacheNetwork, sendEth } from '@/lib/web3';
 import { createPayment } from '@/lib/api';
 import { Wallet, CreditCard, Shield } from 'lucide-react';
+import Navbar from '@/components/Navbar';
 
 export interface Target {
   _id: string;
@@ -152,7 +153,11 @@ export default function BookingClient({ target }: { target: Target }) {
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <>
+      <Navbar />
+      <div className="min-h-screen bg-gray-50 py-8">
+        <div className="container mx-auto px-4 max-w-6xl">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
       {/* Booking Form */}
       <Card>
         <CardHeader>
@@ -251,6 +256,9 @@ export default function BookingClient({ target }: { target: Target }) {
           </div>
         </CardContent>
       </Card>
-    </div>
+          </div>
+        </div>
+      </div>
+    </>
   );
 }
