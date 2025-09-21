@@ -15,20 +15,19 @@ export default function AdminNavbar() {
     try {
       setIsLoggingOut(true);
       
-      // Call the logout API endpoint
-      const response = await fetch('http://localhost:5000/api/auth/logout', {
-        method: 'POST',
-        credentials: 'include', // Important for cookies
-      });
+      // Clear all authentication tokens and data from localStorage
+      localStorage.removeItem('token');
+      localStorage.removeItem('adminAuth');
       
-      if (response.ok) {
-        // Clear any client-side state
-        localStorage.removeItem('adminAuth');
+      // Show success message
+      toast.success('Logged out successfully!');
+      
+      // Small delay to show the success message
+      setTimeout(() => {
         // Redirect to home page with a full page reload to ensure all state is cleared
         window.location.href = '/';
-      } else {
-        throw new Error('Logout failed');
-      }
+      }, 1000);
+      
     } catch (error) {
       console.error('Logout error:', error);
       toast.error('Failed to log out. Please try again.');
