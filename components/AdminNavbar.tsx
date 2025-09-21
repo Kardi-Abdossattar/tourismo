@@ -1,19 +1,40 @@
 "use client";
 
+import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { Home, Shield, LogOut } from 'lucide-react';
+import { Home, Shield, LogOut, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function AdminNavbar() {
   const router = useRouter();
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    router.push('/');
-    router.refresh(); // Force a refresh to update the UI
-    toast.success('Successfully logged out');
+  const handleLogout = async () => {
+    try {
+      setIsLoggingOut(true);
+      
+      // Call the logout API endpoint
+      const response = await fetch('http://localhost:5000/api/auth/logout', {
+        method: 'POST',
+        credentials: 'include', // Important for cookies
+      });
+      
+      if (response.ok) {
+        // Clear any client-side state
+        localStorage.removeItem('adminAuth');
+        // Redirect to home page with a full page reload to ensure all state is cleared
+        window.location.href = '/';
+      } else {
+        throw new Error('Logout failed');
+      }
+    } catch (error) {
+      console.error('Logout error:', error);
+      toast.error('Failed to log out. Please try again.');
+    } finally {
+      setIsLoggingOut(false);
+    }
   };
 
   return (
@@ -61,10 +82,20 @@ export default function AdminNavbar() {
               variant="outline" 
               size="sm" 
               onClick={handleLogout}
+              disabled={isLoggingOut}
               className="text-red-600 hover:bg-red-50 border-red-200 hover:border-red-300"
             >
-              <LogOut className="w-4 h-4 mr-2" />
-              Logout
+              {isLoggingOut ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Logging out...
+                </>
+              ) : (
+                <>
+                  <LogOut className="w-4 h-4 mr-2" />
+                  Logout
+                </>
+              )}
             </Button>
           </div>
         </div>
