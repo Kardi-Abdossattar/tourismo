@@ -28,7 +28,44 @@ export const apiRequest = async (endpoint: string, options: RequestInit = {}) =>
 };
 
 // Target API calls
-export const getTargets = () => apiRequest('/targets');
+export const getTargets = (filters?: {
+  search?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  minRating?: number;
+  maxRating?: number;
+  countries?: string[];
+  featured?: boolean | null;
+  sortBy?: string;
+  sortOrder?: 'asc' | 'desc';
+  page?: number;
+  limit?: number;
+}) => {
+  if (!filters) {
+    return apiRequest('/targets');
+  }
+  
+  const params = new URLSearchParams();
+  
+  if (filters.search) params.append('search', filters.search);
+  if (filters.minPrice !== undefined) params.append('minPrice', filters.minPrice.toString());
+  if (filters.maxPrice !== undefined) params.append('maxPrice', filters.maxPrice.toString());
+  if (filters.minRating !== undefined) params.append('minRating', filters.minRating.toString());
+  if (filters.maxRating !== undefined) params.append('maxRating', filters.maxRating.toString());
+  if (filters.countries && filters.countries.length > 0) {
+    filters.countries.forEach(country => params.append('countries', country));
+  }
+  if (filters.featured !== null && filters.featured !== undefined) {
+    params.append('featured', filters.featured.toString());
+  }
+  if (filters.sortBy) params.append('sortBy', filters.sortBy);
+  if (filters.sortOrder) params.append('sortOrder', filters.sortOrder);
+  if (filters.page) params.append('page', filters.page.toString());
+  if (filters.limit) params.append('limit', filters.limit.toString());
+  
+  const queryString = params.toString();
+  return apiRequest(`/targets${queryString ? `?${queryString}` : ''}`);
+};
 export const getTarget = (id: string) => apiRequest(`/targets/${id}`);
 export const createTarget = (data: any) => apiRequest('/targets', {
   method: 'POST',

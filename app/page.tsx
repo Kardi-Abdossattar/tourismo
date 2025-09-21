@@ -7,7 +7,7 @@ import Navbar from '@/components/Navbar';
 import { Button } from '@/components/ui/button';
 import { MapPin, Globe, Star } from 'lucide-react';
 import { getTargets } from '@/lib/api';
-import { Input } from '@/components/ui/input';
+import { AttractionFilters, FilterState } from '@/components/AttractionFilters';
 import { isMetaMaskAvailable, ensureGanacheNetwork, connectWallet, sendEth } from '@/lib/web3';
 import { toast } from 'sonner';
 
@@ -18,14 +18,26 @@ interface Target {
   price: number;
   image: string;
   location: string;
+  country?: string;
   rating: number;
+  featured?: boolean;
+  createdAt?: string;
 }
 
 export default function Home() {
   const [targets, setTargets] = useState<Target[]>([]);
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState('');
+  const [filters, setFilters] = useState<FilterState>({
+    search: '',
+    priceRange: [0, 10],
+    ratingRange: [0, 5],
+    countries: [],
+    sortBy: 'createdAt',
+    sortOrder: 'desc',
+    featured: null,
+  });
   const [page, setPage] = useState(1);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
   const perPage = 9;
   const destRef = useRef<HTMLDivElement | null>(null);
 
@@ -33,10 +45,17 @@ export default function Home() {
     fetchTargets();
   }, []);
 
-  const fetchTargets = async () => {
+  const fetchTargets = async (filterParams?: any) => {
     try {
-      const data = await getTargets();
-      setTargets(data);
+      setLoading(true);
+      const data = await getTargets(filterParams);
+      
+      // Handle both old format (array) and new format (object with targets)
+      if (Array.isArray(data)) {
+        setTargets(data);
+      } else {
+        setTargets(data.targets || []);
+      }
     } catch (error) {
       console.error('Error fetching targets:', error);
     } finally {
@@ -44,14 +63,8 @@ export default function Home() {
     }
   };
 
-  // Filter targets by title, location, or description
-  const filtered = useMemo(() => {
-    const q = search.trim().toLowerCase();
-    if (!q) return targets;
-    return targets.filter((t) =>
-      [t.title, t.location, t.description].some((f) => f?.toLowerCase().includes(q))
-    );
-  }, [targets, search]);
+  // Use server-side filtering - targets are already filtered
+  const filtered = targets;
 
   // Paginate filtered list
   const totalPages = Math.max(1, Math.ceil(filtered.length / perPage));
@@ -61,6 +74,27 @@ export default function Home() {
 
   const handleExploreClick = () => {
     destRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  const handleFilterChange = async (newFilters: FilterState) => {
+    setFilters(newFilters);
+    setPage(1);
+    
+    // Convert FilterState to API parameters
+    const apiParams = {
+      search: newFilters.search || undefined,
+      minPrice: newFilters.priceRange[0] > 0 ? newFilters.priceRange[0] : undefined,
+      maxPrice: newFilters.priceRange[1] < 10 ? newFilters.priceRange[1] : undefined,
+      minRating: newFilters.ratingRange[0] > 0 ? newFilters.ratingRange[0] : undefined,
+      maxRating: newFilters.ratingRange[1] < 5 ? newFilters.ratingRange[1] : undefined,
+      countries: newFilters.countries.length > 0 ? newFilters.countries : undefined,
+      featured: newFilters.featured,
+      sortBy: newFilters.sortBy,
+      sortOrder: newFilters.sortOrder,
+      limit: 50 // Get more results for client-side pagination
+    };
+
+    await fetchTargets(apiParams);
   };
 
   const handleTestPayment = async () => {
@@ -183,18 +217,25 @@ export default function Home() {
               Choose from our carefully curated collection of breathtaking destinations
             </p>
           </div>
-          {/* Search / Filter */}
-          <div className="max-w-3xl mx-auto mb-8">
-            <Input
-              value={search}
-              onChange={(e) => { setSearch(e.target.value); setPage(1); }}
-              placeholder="Search by title, location, or description..."
-              className="bg-white"
-            />
-          </div>
+          {/* Filters and Grid Layout */}
+          <div className={`flex gap-6 items-start transition-all duration-300 ${isFilterOpen ? '' : 'relative'}`}>
+            {/* Advanced Filters - Left Side */}
+            <div className={`${isFilterOpen ? 'flex-shrink-0' : 'absolute top-0 left-0 z-50'}`}>
+              <AttractionFilters
+                onFilterChange={handleFilterChange}
+                allCountries={Array.from(new Set(targets.map(t => t.country).filter((country): country is string => Boolean(country)))).sort()}
+                maxPrice={Math.max(...targets.map(t => t.price), 10)}
+                onMenuToggle={(isOpen) => {
+                  setIsFilterOpen(isOpen);
+                }}
+              />
+            </div>
 
-          {/* Grid */}
-          <GridLayout targets={paginated} loading={loading} />
+            {/* Grid - Right Side */}
+            <div className="flex-1 min-w-0">
+              <GridLayout targets={paginated} loading={loading} />
+            </div>
+          </div>
 
           {/* Pagination */}
           {!loading && (

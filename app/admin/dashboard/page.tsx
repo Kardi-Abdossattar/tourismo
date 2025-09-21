@@ -49,7 +49,13 @@ export default function AdminDashboard() {
         },
       });
       const data = await response.json();
-      setTargets(data);
+      
+      // Handle both old format (array) and new format (object with targets)
+      if (Array.isArray(data)) {
+        setTargets(data);
+      } else {
+        setTargets(data.targets || []);
+      }
     } catch (error) {
       console.error('Error fetching targets:', error);
       toast.error('Failed to fetch targets');
@@ -148,7 +154,7 @@ export default function AdminDashboard() {
 
         {/* Targets Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {targets.slice((page - 1) * perPage, page * perPage).map((target) => (
+          {(targets || []).slice((page - 1) * perPage, page * perPage).map((target) => (
             <Card key={target._id} className="overflow-hidden hover:shadow-lg transition-shadow h-full flex flex-col">
               <div className="aspect-video overflow-hidden">
                 <img
@@ -209,7 +215,7 @@ export default function AdminDashboard() {
         </div>
 
         {/* Pagination */}
-        {targets.length > perPage && (
+        {(targets || []).length > perPage && (
           <div className="flex justify-center mt-8 space-x-2">
             <Button
               variant="outline"
@@ -220,13 +226,13 @@ export default function AdminDashboard() {
               Previous
             </Button>
             <div className="flex items-center px-4 text-sm text-gray-600">
-              Page {page} of {Math.ceil(targets.length / perPage)}
+              Page {page} of {Math.ceil((targets || []).length / perPage)}
             </div>
             <Button
               variant="outline"
               size="sm"
-              onClick={() => setPage(p => Math.min(Math.ceil(targets.length / perPage), p + 1))}
-              disabled={page >= Math.ceil(targets.length / perPage)}
+              onClick={() => setPage(p => Math.min(Math.ceil((targets || []).length / perPage), p + 1))}
+              disabled={page >= Math.ceil((targets || []).length / perPage)}
             >
               Next
             </Button>
