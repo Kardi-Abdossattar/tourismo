@@ -110,39 +110,40 @@ export default function AdminDashboard() {
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
-            <p className="text-gray-600 mt-2">Manage your travel destinations</p>
+        <div className="flex flex-col space-y-6 mb-8">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
+              <p className="text-gray-600 mt-1">Manage your travel destinations</p>
+            </div>
+            <div className="flex flex-wrap justify-end gap-3">
+              <Button
+                onClick={() => router.push('/admin/pages')}
+                variant="outline"
+                size="sm"
+                className="whitespace-nowrap"
+              >
+                Pages
+              </Button>
+              <Button
+                onClick={() => router.push('/admin/bookings')}
+                variant="outline"
+                size="sm"
+                className="whitespace-nowrap"
+              >
+                Bookings
+              </Button>
+              <Button
+                onClick={() => setShowForm(true)}
+                size="sm"
+                className="bg-blue-600 hover:bg-blue-700 whitespace-nowrap"
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                Add Target
+              </Button>
+            </div>
           </div>
-          <div className="flex space-x-4">
-            <Button
-              onClick={() => router.push('/admin/pages')}
-              variant="outline"
-            >
-              Pages
-            </Button>
-            <Button
-              onClick={() => router.push('/admin/bookings')}
-              variant="outline"
-            >
-              Bookings
-            </Button>
-            <Button
-              onClick={() => setShowForm(true)}
-              className="bg-blue-600 hover:bg-blue-700"
-            >
-              <Plus className="w-4 h-4 mr-2" />
-              Add Target
-            </Button>
-            <Button
-              onClick={handleLogout}
-              variant="outline"
-            >
-              <LogOut className="w-4 h-4 mr-2" />
-              Logout
-            </Button>
-          </div>
+          <div className="border-t border-gray-200"></div>
         </div>
 
         {/* Targets Grid */}

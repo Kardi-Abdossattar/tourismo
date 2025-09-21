@@ -11,7 +11,8 @@ export default function AdminNavbar() {
 
   const handleLogout = () => {
     localStorage.removeItem('token');
-    router.push('/admin/login');
+    router.push('/');
+    router.refresh(); // Force a refresh to update the UI
     toast.success('Successfully logged out');
   };
 

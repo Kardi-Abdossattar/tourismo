@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -14,6 +14,14 @@ export default function AdminLogin() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    // If already logged in, redirect to dashboard
+    const token = localStorage.getItem('token');
+    if (token) {
+      router.push('/admin/dashboard');
+    }
+  }, [router]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
