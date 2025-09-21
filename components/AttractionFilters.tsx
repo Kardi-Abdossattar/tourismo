@@ -139,10 +139,11 @@ export function AttractionFilters({
       <Button
         onClick={() => toggleMenu(!isOpen)}
         variant={hasActiveFilters ? "default" : "outline"}
-        className="shadow-lg transition-all duration-300 rounded-lg justify-start"
+        className="shadow-lg transition-all duration-300 rounded-lg justify-start w-full sm:w-auto"
         style={{
-          padding: '12px 20px',
-          width: isOpen ? '350px' : '200px',
+          padding: '8px 16px',
+          minHeight: '44px',
+          width: isOpen ? (typeof window !== 'undefined' && window.innerWidth < 640 ? '100%' : '350px') : (typeof window !== 'undefined' && window.innerWidth < 640 ? '100%' : '200px'),
         }}
       >
         <Filter className="h-4 w-4 mr-2" />
@@ -167,12 +168,11 @@ export function AttractionFilters({
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.3, ease: 'easeInOut' }}
-            className="bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden mt-2"
-            style={{ width: '350px' }}
+            className="bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden mt-2 w-full sm:w-[350px] max-w-full"
           >
-            <div className="p-6">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-lg font-semibold text-gray-900">Filters</h3>
+            <div className="p-4 sm:p-6">
+              <div className="flex items-center justify-between mb-4 sm:mb-6">
+                <h3 className="text-base sm:text-lg font-semibold text-gray-900">Filters</h3>
                 <Button 
                   variant="ghost" 
                   size="icon" 
@@ -183,27 +183,27 @@ export function AttractionFilters({
                 </Button>
               </div>
               
-              <div className="space-y-6">
+              <div className="space-y-4 sm:space-y-6">
                 {/* Search */}
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                   <Input
                     type="text"
-                    placeholder="Search by title, location, or description..."
-                    className="pl-10 w-full"
+                    placeholder="Search destinations..."
+                    className="pl-10 w-full text-sm sm:text-base min-h-[44px]"
                     value={localFilters.search}
                     onChange={handleSearchChange}
                   />
                 </div>
                 
-                <div className="flex items-center justify-between">
-                  <h4 className="font-medium text-gray-700">Filter & Sort Options</h4>
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                  <h4 className="text-sm sm:text-base font-medium text-gray-700">Filter & Sort Options</h4>
                   <Button 
                     variant="ghost" 
                     size="sm" 
                     onClick={clearFilters}
                     disabled={!hasActiveFilters}
-                    className="text-blue-600 hover:text-blue-700"
+                    className="text-blue-600 hover:text-blue-700 w-full sm:w-auto text-xs sm:text-sm min-h-[36px]"
                   >
                     Clear all
                   </Button>
@@ -213,11 +213,11 @@ export function AttractionFilters({
                 
                 {/* Sort Options */}
                 <div>
-                  <h5 className="text-sm font-medium mb-3 flex items-center">
-                    <ArrowUpDown className="h-4 w-4 mr-2 text-purple-600" />
+                  <h5 className="text-xs sm:text-sm font-medium mb-2 sm:mb-3 flex items-center">
+                    <ArrowUpDown className="h-3 h-3 sm:h-4 sm:w-4 mr-1 sm:mr-2 text-purple-600" />
                     Sort By
                   </h5>
-                  <div className="grid grid-cols-2 gap-2 mb-3">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-1 sm:gap-2 mb-2 sm:mb-3">
                     {[
                       { key: 'title', label: 'Title', icon: '📝' },
                       { key: 'price', label: 'Price', icon: '💰' },
@@ -229,32 +229,35 @@ export function AttractionFilters({
                         key={option.key}
                         variant={localFilters.sortBy === option.key ? 'default' : 'outline'}
                         size="sm"
-                        className="justify-start text-xs"
+                        className="justify-start text-xs min-h-[32px] px-2"
                         onClick={() => handleSortChange(option.key as FilterState['sortBy'], localFilters.sortOrder)}
                       >
-                        <span className="mr-1">{option.icon}</span>
-                        {option.label}
+                        <span className="mr-1 text-xs">{option.icon}</span>
+                        <span className="hidden sm:inline">{option.label}</span>
+                        <span className="sm:hidden text-xs">{option.label.slice(0, 4)}</span>
                       </Button>
                     ))}
                   </div>
-                  <div className="flex space-x-2">
+                  <div className="flex space-x-1 sm:space-x-2">
                     <Button
                       variant={localFilters.sortOrder === 'asc' ? 'default' : 'outline'}
                       size="sm"
-                      className="flex-1"
+                      className="flex-1 text-xs min-h-[32px]"
                       onClick={() => handleSortChange(localFilters.sortBy, 'asc')}
                     >
                       <ArrowUp className="h-3 w-3 mr-1" />
-                      Ascending
+                      <span className="hidden sm:inline">Ascending</span>
+                      <span className="sm:hidden">Asc</span>
                     </Button>
                     <Button
                       variant={localFilters.sortOrder === 'desc' ? 'default' : 'outline'}
                       size="sm"
-                      className="flex-1"
+                      className="flex-1 text-xs min-h-[32px]"
                       onClick={() => handleSortChange(localFilters.sortBy, 'desc')}
                     >
                       <ArrowDown className="h-3 w-3 mr-1" />
-                      Descending
+                      <span className="hidden sm:inline">Descending</span>
+                      <span className="sm:hidden">Desc</span>
                     </Button>
                   </div>
                 </div>

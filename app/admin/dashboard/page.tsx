@@ -201,39 +201,42 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-gray-50 p-3 sm:p-4 md:p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="flex flex-col space-y-6 mb-8">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="flex flex-col space-y-4 sm:space-y-6 mb-6 sm:mb-8">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
-              <p className="text-gray-600 mt-1">Manage your travel destinations</p>
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Admin Dashboard</h1>
+              <p className="text-sm sm:text-base text-gray-600 mt-1">Manage your travel destinations</p>
             </div>
-            <div className="flex flex-wrap justify-end gap-3">
-              <Button
-                onClick={() => router.push('/admin/pages')}
-                variant="outline"
-                size="sm"
-                className="whitespace-nowrap"
-              >
-                Pages
-              </Button>
-              <Button
-                onClick={() => router.push('/admin/bookings')}
-                variant="outline"
-                size="sm"
-                className="whitespace-nowrap"
-              >
-                Bookings
-              </Button>
+            <div className="flex flex-col sm:flex-row sm:justify-end gap-2 sm:gap-3">
+              <div className="flex gap-2 sm:gap-3">
+                <Button
+                  onClick={() => router.push('/admin/pages')}
+                  variant="outline"
+                  size="sm"
+                  className="flex-1 sm:flex-none whitespace-nowrap min-h-[40px]"
+                >
+                  Pages
+                </Button>
+                <Button
+                  onClick={() => router.push('/admin/bookings')}
+                  variant="outline"
+                  size="sm"
+                  className="flex-1 sm:flex-none whitespace-nowrap min-h-[40px]"
+                >
+                  Bookings
+                </Button>
+              </div>
               <Button
                 onClick={() => setShowForm(true)}
                 size="sm"
-                className="bg-blue-600 hover:bg-blue-700 whitespace-nowrap"
+                className="bg-blue-600 hover:bg-blue-700 whitespace-nowrap min-h-[40px] w-full sm:w-auto"
               >
                 <Plus className="w-4 h-4 mr-2" />
-                Add Target
+                <span className="hidden sm:inline">Add Target</span>
+                <span className="sm:hidden">Add</span>
               </Button>
             </div>
           </div>
@@ -241,9 +244,9 @@ export default function AdminDashboard() {
         </div>
 
         {/* Filters and Targets Layout */}
-        <div className={`flex gap-6 items-start transition-all duration-300 ${isFilterOpen ? '' : 'relative'}`}>
+        <div className={`flex flex-col lg:flex-row gap-4 lg:gap-6 items-start transition-all duration-300 ${isFilterOpen ? '' : 'relative'}`}>
           {/* Advanced Filters - Left Side */}
-          <div className={`${isFilterOpen ? 'flex-shrink-0' : 'absolute top-0 left-0 z-50'}`}>
+          <div className={`w-full lg:w-auto ${isFilterOpen ? 'flex-shrink-0' : 'absolute top-0 left-0 z-50'}`}>
             <AttractionFilters
               onFilterChange={handleFilterChange}
               allCountries={Array.from(new Set(allTargets.map(t => t.country).filter((country): country is string => Boolean(country)))).sort()}
@@ -255,8 +258,8 @@ export default function AdminDashboard() {
           </div>
 
           {/* Targets Grid - Right Side */}
-          <div className="flex-1 min-w-0">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="flex-1 min-w-0 w-full">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
               {(targets || []).slice((page - 1) * perPage, page * perPage).map((target) => (
                 <Card key={target._id} className="overflow-hidden hover:shadow-lg transition-shadow h-full flex flex-col">
                   <div className="aspect-video overflow-hidden">
@@ -266,78 +269,83 @@ export default function AdminDashboard() {
                       className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                     />
                   </div>
-              <CardHeader className="flex-grow">
-                <CardTitle className="text-lg">{target.title}</CardTitle>
-                <p className="text-sm text-gray-600">{target.location}</p>
-              </CardHeader>
-              <CardContent className="mt-auto">
-                <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-                  {target.description}
-                </p>
-                <div className="flex justify-between items-center mb-4">
-                  <span className="text-2xl font-bold text-blue-600">
-                    ${target.price} ETH
-                  </span>
-                  <div className="flex items-center text-sm text-gray-500">
-                    <Star className="w-4 h-4 fill-yellow-400 text-yellow-400 mr-1" />
-                    {target.rating}/5
-                  </div>
-                </div>
-                <div className="flex space-x-2">
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => router.push(`/target/${target._id}`)}
-                    className="flex-1"
-                  >
-                    <Eye className="w-4 h-4 mr-2" />
-                    View
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => handleEdit(target)}
-                    className="flex-1"
-                  >
-                    <Edit className="w-4 h-4 mr-2" />
-                    Edit
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => handleDelete(target._id)}
-                    className="text-red-600 hover:text-red-700 flex-1"
-                  >
-                    <Trash2 className="w-4 h-4 mr-2" />
-                    Delete
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+                  <CardHeader className="flex-grow p-3 sm:p-6">
+                    <CardTitle className="text-base sm:text-lg line-clamp-2">{target.title}</CardTitle>
+                    <p className="text-xs sm:text-sm text-gray-600">{target.location}</p>
+                  </CardHeader>
+                  <CardContent className="mt-auto p-3 sm:p-6 pt-0">
+                    <p className="text-gray-600 text-xs sm:text-sm mb-3 sm:mb-4 line-clamp-2">
+                      {target.description}
+                    </p>
+                    <div className="flex justify-between items-center mb-3 sm:mb-4">
+                      <span className="text-lg sm:text-2xl font-bold text-blue-600">
+                        ${target.price} ETH
+                      </span>
+                      <div className="flex items-center text-xs sm:text-sm text-gray-500">
+                        <Star className="w-3 h-3 sm:w-4 sm:h-4 fill-yellow-400 text-yellow-400 mr-1" />
+                        {target.rating}/5
+                      </div>
+                    </div>
+                    <div className="flex flex-col sm:flex-row gap-2">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => router.push(`/target/${target._id}`)}
+                        className="flex-1 text-xs min-h-[36px]"
+                      >
+                        <Eye className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                        View
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleEdit(target)}
+                        className="flex-1 text-xs min-h-[36px]"
+                      >
+                        <Edit className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                        Edit
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleDelete(target._id)}
+                        className="text-red-600 hover:text-red-700 flex-1 text-xs min-h-[36px]"
+                      >
+                        <Trash2 className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                        <span className="hidden sm:inline">Delete</span>
+                        <span className="sm:hidden">Del</span>
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
           </div>
         </div>
 
         {/* Pagination */}
         {(targets || []).length > perPage && (
-          <div className="flex justify-center mt-8 space-x-2">
+          <div className="flex justify-center mt-6 sm:mt-8 space-x-2 px-4">
             <Button
               variant="outline"
               size="sm"
               onClick={() => setPage(p => Math.max(1, p - 1))}
               disabled={page === 1}
+              className="min-h-[40px] px-3 sm:px-4"
             >
-              Previous
+              <span className="hidden sm:inline">Previous</span>
+              <span className="sm:hidden">Prev</span>
             </Button>
-            <div className="flex items-center px-4 text-sm text-gray-600">
-              Page {page} of {Math.ceil((targets || []).length / perPage)}
+            <div className="flex items-center px-2 sm:px-4 text-xs sm:text-sm text-gray-600 text-center">
+              <span className="hidden sm:inline">Page {page} of {Math.ceil((targets || []).length / perPage)}</span>
+              <span className="sm:hidden">{page}/{Math.ceil((targets || []).length / perPage)}</span>
             </div>
             <Button
               variant="outline"
               size="sm"
               onClick={() => setPage(p => Math.min(Math.ceil((targets || []).length / perPage), p + 1))}
               disabled={page >= Math.ceil((targets || []).length / perPage)}
+              className="min-h-[40px] px-3 sm:px-4"
             >
               Next
             </Button>

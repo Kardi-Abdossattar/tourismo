@@ -100,47 +100,49 @@ export default function AdminForm({ target, onSubmit, onCancel }: AdminFormProps
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <Card className="w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-        <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-2 sm:p-4 z-50">
+      <Card className="w-full max-w-2xl max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
+        <CardHeader className="flex flex-row items-center justify-between p-4 sm:p-6">
+          <CardTitle className="text-lg sm:text-xl">
             {target ? 'Edit Target' : 'Add New Target'}
           </CardTitle>
-          <Button variant="ghost" size="sm" onClick={onCancel}>
+          <Button variant="ghost" size="sm" onClick={onCancel} className="min-h-[40px] min-w-[40px]">
             <X className="w-4 h-4" />
           </Button>
         </CardHeader>
 
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
+        <CardContent className="p-4 sm:p-6 pt-0">
+          <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
             <div>
-              <Label htmlFor="title">Title</Label>
+              <Label htmlFor="title" className="text-sm sm:text-base">Title</Label>
               <Input
                 id="title"
                 name="title"
                 value={formData.title}
                 onChange={handleChange}
                 placeholder="Enter destination title"
+                className="mt-1 min-h-[44px] text-sm sm:text-base"
                 required
               />
             </div>
 
             <div>
-              <Label htmlFor="description">Description</Label>
+              <Label htmlFor="description" className="text-sm sm:text-base">Description</Label>
               <Textarea
                 id="description"
                 name="description"
                 value={formData.description}
                 onChange={handleChange}
                 placeholder="Enter destination description"
-                rows={4}
+                rows={3}
+                className="mt-1 min-h-[80px] text-sm sm:text-base resize-none"
                 required
               />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
               <div>
-                <Label htmlFor="price">Price (ETH)</Label>
+                <Label htmlFor="price" className="text-sm sm:text-base">Price (ETH)</Label>
                 <Input
                   id="price"
                   name="price"
@@ -149,12 +151,13 @@ export default function AdminForm({ target, onSubmit, onCancel }: AdminFormProps
                   value={formData.price}
                   onChange={handleChange}
                   placeholder="0.00"
+                  className="mt-1 min-h-[44px] text-sm sm:text-base"
                   required
                 />
               </div>
 
               <div>
-                <Label htmlFor="rating">Rating (1-5)</Label>
+                <Label htmlFor="rating" className="text-sm sm:text-base">Rating (1-5)</Label>
                 <Input
                   id="rating"
                   name="rating"
@@ -165,14 +168,15 @@ export default function AdminForm({ target, onSubmit, onCancel }: AdminFormProps
                   value={formData.rating}
                   onChange={handleChange}
                   placeholder="4.5"
+                  className="mt-1 min-h-[44px] text-sm sm:text-base"
                   required
                 />
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="location">Location</Label>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+              <div className="space-y-1 sm:space-y-2">
+                <Label htmlFor="location" className="text-sm sm:text-base">Location</Label>
                 <Input
                   id="location"
                   value={formData.location}
@@ -180,19 +184,20 @@ export default function AdminForm({ target, onSubmit, onCancel }: AdminFormProps
                     setFormData({ ...formData, location: e.target.value })
                   }
                   placeholder="City, landmark, etc."
+                  className="min-h-[44px] text-sm sm:text-base"
                   required
                 />
               </div>
               
-              <div className="space-y-2">
-                <Label htmlFor="country">Country <span className="text-red-500">*</span></Label>
+              <div className="space-y-1 sm:space-y-2">
+                <Label htmlFor="country" className="text-sm sm:text-base">Country <span className="text-red-500">*</span></Label>
                 <select
                   id="country"
                   value={formData.country}
                   onChange={(e) =>
                     setFormData({ ...formData, country: e.target.value })
                   }
-                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="flex h-11 w-full rounded-md border border-input bg-background px-3 py-2 text-sm sm:text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                   required
                 >
                   <option value="">Select a country</option>
@@ -227,7 +232,7 @@ export default function AdminForm({ target, onSubmit, onCancel }: AdminFormProps
             </div>
 
             <div>
-              <Label htmlFor="image">Image URL</Label>
+              <Label htmlFor="image" className="text-sm sm:text-base">Image URL</Label>
               <Input
                 id="image"
                 name="image"
@@ -235,15 +240,16 @@ export default function AdminForm({ target, onSubmit, onCancel }: AdminFormProps
                 value={formData.image}
                 onChange={handleChange}
                 placeholder="https://example.com/image.jpg"
+                className="mt-1 min-h-[44px] text-sm sm:text-base"
                 required
               />
             </div>
 
-            <div className="flex space-x-4 pt-4">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-2 sm:pt-4">
               <Button
                 type="submit"
                 disabled={loading}
-                className="flex-1 bg-blue-600 hover:bg-blue-700"
+                className="flex-1 bg-blue-600 hover:bg-blue-700 min-h-[44px] text-sm sm:text-base order-2 sm:order-1"
               >
                 {loading ? 'Saving...' : (target ? 'Update Target' : 'Create Target')}
               </Button>
@@ -251,7 +257,7 @@ export default function AdminForm({ target, onSubmit, onCancel }: AdminFormProps
                 type="button"
                 variant="outline"
                 onClick={onCancel}
-                className="flex-1"
+                className="flex-1 min-h-[44px] text-sm sm:text-base order-1 sm:order-2"
               >
                 Cancel
               </Button>
