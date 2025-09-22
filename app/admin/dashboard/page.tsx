@@ -259,7 +259,7 @@ export default function AdminDashboard() {
 
           {/* Targets Grid - Right Side */}
           <div className="flex-1 min-w-0 w-full">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+            <div className="grid grid-cols-3 gap-4 sm:gap-6">
               {(targets || []).slice((page - 1) * perPage, page * perPage).map((target) => (
                 <Card key={target._id} className="overflow-hidden hover:shadow-lg transition-shadow h-full flex flex-col">
                   <div className="aspect-video overflow-hidden">

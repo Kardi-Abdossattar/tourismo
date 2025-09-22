@@ -18,7 +18,7 @@ interface GridLayoutProps {
 export default function GridLayout({ targets, loading }: GridLayoutProps) {
   if (loading) {
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+      <div className="grid grid-cols-3 gap-4 sm:gap-6">
         {Array.from({ length: 9 }).map((_, index) => (
           <div key={index} className="overflow-hidden rounded-xl border bg-white shadow-sm">
             <div className="relative aspect-video">
@@ -49,7 +49,7 @@ export default function GridLayout({ targets, loading }: GridLayoutProps) {
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+    <div className="grid grid-cols-3 gap-4 sm:gap-6">
       {targets.map((target) => (
         <TargetCard key={target._id} target={target} />
       ))}
