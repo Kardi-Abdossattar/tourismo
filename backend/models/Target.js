@@ -38,7 +38,11 @@ const targetSchema = new mongoose.Schema({
     required: true,
     min: 0
   },
-  image: {
+  thumbnailImage: {
+    type: String,
+    required: false
+  },
+  heroImage: {
     type: String,
     required: true
   },
@@ -55,6 +59,9 @@ const targetSchema = new mongoose.Schema({
     default: 4.5
   },
   amenities: [{
+    type: String
+  }],
+  whatsIncluded: [{
     type: String
   }],
   duration: {

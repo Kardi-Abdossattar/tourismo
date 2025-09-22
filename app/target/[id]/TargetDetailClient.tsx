@@ -12,10 +12,12 @@ interface Target {
   title: string;
   description: string;
   price: number;
-  image: string;
+  thumbnailImage?: string;
+  heroImage: string;
   location: string;
   rating: number;
   amenities: string[];
+  whatsIncluded?: string[];
   duration: string;
 }
 
@@ -47,7 +49,7 @@ export default function TargetDetailClient({ initialTarget, id }: { initialTarge
       <Navbar />
       <div className="container mx-auto px-4 py-8">
         <div className="relative h-96 md:h-[500px] rounded-2xl overflow-hidden mb-8">
-          <img src={target.image} alt={target.title} className="w-full h-full object-cover" />
+          <img src={target.heroImage} alt={target.title} className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
           <div className="absolute bottom-6 left-6 text-white">
             <h1 className="text-4xl md:text-5xl font-bold mb-2">{target.title}</h1>
@@ -69,13 +71,20 @@ export default function TargetDetailClient({ initialTarget, id }: { initialTarge
             <Card>
               <CardContent className="p-6">
                 <h2 className="text-2xl font-bold mb-4">What's included</h2>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                  {target.amenities?.map((amenity, index) => (
-                    <div key={index} className="flex items-center space-x-2">
-                      <Wifi className="w-5 h-5 text-emerald-600" />
-                      <span className="text-gray-700">{amenity}</span>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {(target.whatsIncluded && target.whatsIncluded.length > 0 
+                    ? target.whatsIncluded 
+                    : target.amenities || []
+                  ).map((item, index) => (
+                    <div key={index} className="flex items-center space-x-3">
+                      <div className="w-2 h-2 bg-emerald-600 rounded-full flex-shrink-0"></div>
+                      <span className="text-gray-700">{item}</span>
                     </div>
                   ))}
+                  {(!target.whatsIncluded || target.whatsIncluded.length === 0) && 
+                   (!target.amenities || target.amenities.length === 0) && (
+                    <p className="text-gray-500 italic">No items listed yet.</p>
+                  )}
                 </div>
               </CardContent>
             </Card>

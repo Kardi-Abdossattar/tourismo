@@ -11,7 +11,8 @@ interface TargetCardProps {
     title: string;
     description: string;
     price: number;
-    image: string;
+    thumbnailImage?: string;
+    heroImage: string;
     location: string;
     rating: number;
   };
@@ -22,7 +23,7 @@ export default function TargetCard({ target }: TargetCardProps) {
     <Card className="group overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 sm:hover:-translate-y-2 h-full flex flex-col">
       <div className="relative aspect-video overflow-hidden">
         <img
-          src={target.image}
+          src={target.thumbnailImage || target.heroImage}
           alt={target.title}
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
         />

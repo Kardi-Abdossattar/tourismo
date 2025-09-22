@@ -14,10 +14,12 @@ interface Target {
   title: string;
   description: string;
   price: number;
-  image: string;
+  thumbnailImage?: string;
+  heroImage: string;
   location: string;
   rating: number;
   country?: string;
+  whatsIncluded?: string[];
 }
 
 interface AdminFormProps {
@@ -31,10 +33,12 @@ export default function AdminForm({ target, onSubmit, onCancel }: AdminFormProps
     title: '',
     description: '',
     price: '',
-    image: '',
+    thumbnailImage: '',
+    heroImage: '',
     location: '',
     rating: '',
     country: '',
+    whatsIncluded: '',
   });
   const [loading, setLoading] = useState(false);
 
@@ -44,10 +48,12 @@ export default function AdminForm({ target, onSubmit, onCancel }: AdminFormProps
         title: target.title,
         description: target.description,
         price: target.price.toString(),
-        image: target.image,
+        thumbnailImage: target.thumbnailImage || '',
+        heroImage: target.heroImage,
         location: target.location,
         rating: target.rating.toString(),
         country: target.country || '',
+        whatsIncluded: target.whatsIncluded ? target.whatsIncluded.join('\n') : '',
       });
     }
   }, [target]);
@@ -82,6 +88,8 @@ export default function AdminForm({ target, onSubmit, onCancel }: AdminFormProps
           price: parseFloat(formData.price),
           rating: parseFloat(formData.rating),
           country: formData.country || undefined,
+          thumbnailImage: formData.thumbnailImage || undefined,
+          whatsIncluded: formData.whatsIncluded ? formData.whatsIncluded.split('\n').filter(item => item.trim()) : [],
         }),
       });
 
@@ -232,17 +240,50 @@ export default function AdminForm({ target, onSubmit, onCancel }: AdminFormProps
             </div>
 
             <div>
-              <Label htmlFor="image" className="text-sm sm:text-base">Image URL</Label>
+              <Label htmlFor="heroImage" className="text-sm sm:text-base">
+                Hero Image URL 
+                <span className="text-xs text-gray-500 ml-2">(Required - Recommended: 1200x800px for detail page)</span>
+              </Label>
               <Input
-                id="image"
-                name="image"
+                id="heroImage"
+                name="heroImage"
                 type="url"
-                value={formData.image}
+                value={formData.heroImage}
                 onChange={handleChange}
-                placeholder="https://example.com/image.jpg"
+                placeholder="https://example.com/hero-image.jpg"
                 className="mt-1 min-h-[44px] text-sm sm:text-base"
                 required
               />
+            </div>
+
+            <div>
+              <Label htmlFor="thumbnailImage" className="text-sm sm:text-base">
+                Thumbnail Image URL 
+                <span className="text-xs text-gray-500 ml-2">(Optional - Recommended: 400x300px for grid cards)</span>
+              </Label>
+              <Input
+                id="thumbnailImage"
+                name="thumbnailImage"
+                type="url"
+                value={formData.thumbnailImage}
+                onChange={handleChange}
+                placeholder="https://example.com/thumbnail-image.jpg"
+                className="mt-1 min-h-[44px] text-sm sm:text-base"
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="whatsIncluded" className="text-sm sm:text-base">What's Included</Label>
+              <Textarea
+                id="whatsIncluded"
+                name="whatsIncluded"
+                value={formData.whatsIncluded}
+                onChange={handleChange}
+                placeholder="Enter each item on a new line:&#10;Free WiFi&#10;Breakfast included&#10;Airport transfer&#10;Tour guide"
+                rows={4}
+                className="mt-1 min-h-[100px] text-sm sm:text-base resize-none"
+              />
+              <p className="text-xs text-gray-500 mt-1">Enter each included item on a separate line</p>
             </div>
 
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-2 sm:pt-4">
