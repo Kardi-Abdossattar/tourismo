@@ -175,10 +175,10 @@ export default function Navbar({ onDestinationsClick }: NavbarProps) {
               <Button
                 variant="ghost"
                 size={scrolled ? "sm" : "default"}
-                className={`transition-all duration-300 font-medium ${
+                className={`transition-all duration-500 font-medium border ${
                   scrolled 
-                    ? 'px-2 sm:px-3 lg:px-4 py-2 text-gray-800 hover:text-blue-600 hover:bg-blue-50 bg-gray-50/50 rounded-xl shadow-sm border border-gray-200/50' 
-                    : 'px-4 py-2 text-white hover:text-blue-200 hover:bg-white/10'
+                    ? 'px-2 sm:px-3 lg:px-4 py-2 text-gray-800 hover:text-blue-600 hover:bg-blue-50 bg-gray-50/50 rounded-xl shadow-sm border-gray-200/50' 
+                    : 'px-4 py-2 text-white hover:text-blue-200 hover:bg-white/10 border-transparent'
                 }`}
                 onClick={handleDestinationsClick}
               >
@@ -190,10 +190,10 @@ export default function Navbar({ onDestinationsClick }: NavbarProps) {
               <Button
                 variant="ghost"
                 size={scrolled ? "sm" : "default"}
-                className={`transition-all duration-300 font-medium ${
+                className={`transition-all duration-500 font-medium border ${
                   scrolled 
-                    ? 'px-2 sm:px-3 lg:px-4 py-2 text-gray-800 hover:text-blue-600 hover:bg-blue-50 bg-gray-50/50 rounded-xl shadow-sm border border-gray-200/50' 
-                    : 'px-4 py-2 text-white hover:text-blue-200 hover:bg-white/10'
+                    ? 'px-2 sm:px-3 lg:px-4 py-2 text-gray-800 hover:text-blue-600 hover:bg-blue-50 bg-gray-50/50 rounded-xl shadow-sm border-gray-200/50' 
+                    : 'px-4 py-2 text-white hover:text-blue-200 hover:bg-white/10 border-transparent'
                 }`}
                 onClick={handleAboutClick}
               >
@@ -214,10 +214,10 @@ export default function Navbar({ onDestinationsClick }: NavbarProps) {
               <Button
                 variant="ghost"
                 size={scrolled ? "sm" : "default"}
-                className={`transition-all duration-300 font-medium ${
+                className={`transition-all duration-500 font-medium border ${
                   scrolled 
-                    ? 'px-2 sm:px-3 lg:px-4 py-2 text-gray-800 hover:text-blue-600 hover:bg-blue-50 bg-gray-50/50 rounded-xl shadow-sm border border-gray-200/50' 
-                    : 'px-4 py-2 text-white hover:text-blue-200 hover:bg-white/10'
+                    ? 'px-2 sm:px-3 lg:px-4 py-2 text-gray-800 hover:text-blue-600 hover:bg-blue-50 bg-gray-50/50 rounded-xl shadow-sm border-gray-200/50' 
+                    : 'px-4 py-2 text-white hover:text-blue-200 hover:bg-white/10 border-transparent'
                 }`}
                 onClick={handleContactClick}
               >
@@ -231,7 +231,7 @@ export default function Navbar({ onDestinationsClick }: NavbarProps) {
                   variant="ghost"
                   size="sm"
                   onClick={handleAdminClick}
-                  className={`transition-all duration-300 border ${
+                  className={`transition-all duration-500 border ${
                     scrolled 
                       ? 'px-2 sm:px-3 lg:px-4 py-2 border-blue-300 text-blue-700 hover:bg-blue-50 hover:border-blue-400 bg-blue-50/30 rounded-xl shadow-sm' 
                       : 'border-white/20 text-white hover:bg-white/10 hover:border-white/40 bg-transparent'
