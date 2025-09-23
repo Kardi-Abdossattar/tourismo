@@ -9,6 +9,7 @@ const bookingRoutes = require('./routes/bookingRoutes');
 const authRoutes = require('./routes/authRoutes');
 const pageRoutes = require('./routes/pageRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
+const uploadRoutes = require('./routes/uploadRoutes');
 
 // Import middleware
 const errorHandler = require('./middleware/errorHandler');
@@ -21,6 +22,9 @@ const PORT = process.env.PORT || 5000;
 // Middleware
 app.use(cors());
 app.use(express.json());
+
+// Serve static files from uploads directory
+app.use('/uploads', express.static('uploads'));
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/tourismo', {
@@ -38,6 +42,7 @@ app.use('/api/bookings', bookingRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/pages', pageRoutes);
 app.use('/api/payment', paymentRoutes);
+app.use('/api/upload', uploadRoutes);
 
 // Health check route
 app.get('/api/health', (req, res) => {

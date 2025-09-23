@@ -1,13 +1,13 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
-import { X } from 'lucide-react';
+import { X, Upload, Link, Image } from 'lucide-react';
 
 interface Target {
   _id: string;
@@ -41,6 +41,17 @@ export default function AdminForm({ target, onSubmit, onCancel }: AdminFormProps
     whatsIncluded: '',
   });
   const [loading, setLoading] = useState(false);
+  
+  // Image upload states
+  const [heroImageMode, setHeroImageMode] = useState<'url' | 'upload'>('url');
+  const [thumbnailImageMode, setThumbnailImageMode] = useState<'url' | 'upload'>('url');
+  const [heroImageFile, setHeroImageFile] = useState<File | null>(null);
+  const [thumbnailImageFile, setThumbnailImageFile] = useState<File | null>(null);
+  const [heroImagePreview, setHeroImagePreview] = useState<string>('');
+  const [thumbnailImagePreview, setThumbnailImagePreview] = useState<string>('');
+  
+  const heroFileInputRef = useRef<HTMLInputElement>(null);
+  const thumbnailFileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (target) {
@@ -65,11 +76,73 @@ export default function AdminForm({ target, onSubmit, onCancel }: AdminFormProps
     });
   };
 
+  const handleFileChange = (type: 'hero' | 'thumbnail', file: File | null) => {
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      toast.error('Please select a valid image file');
+      return;
+    }
+
+    // Validate file size (5MB limit)
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('Image size must be less than 5MB');
+      return;
+    }
+
+    if (type === 'hero') {
+      setHeroImageFile(file);
+      const reader = new FileReader();
+      reader.onload = (e) => setHeroImagePreview(e.target?.result as string);
+      reader.readAsDataURL(file);
+    } else {
+      setThumbnailImageFile(file);
+      const reader = new FileReader();
+      reader.onload = (e) => setThumbnailImagePreview(e.target?.result as string);
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const uploadImage = async (file: File): Promise<string> => {
+    const formData = new FormData();
+    formData.append('image', file);
+
+    const token = localStorage.getItem('token');
+    const response = await fetch('http://localhost:5000/api/upload', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+      body: formData,
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to upload image');
+    }
+
+    const data = await response.json();
+    return data.imageUrl;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     try {
+      let heroImageUrl = formData.heroImage;
+      let thumbnailImageUrl = formData.thumbnailImage;
+
+      // Upload hero image if file is selected
+      if (heroImageMode === 'upload' && heroImageFile) {
+        heroImageUrl = await uploadImage(heroImageFile);
+      }
+
+      // Upload thumbnail image if file is selected
+      if (thumbnailImageMode === 'upload' && thumbnailImageFile) {
+        thumbnailImageUrl = await uploadImage(thumbnailImageFile);
+      }
+
       const token = localStorage.getItem('token');
       const url = target
         ? `http://localhost:5000/api/targets/${target._id}`
@@ -88,7 +161,8 @@ export default function AdminForm({ target, onSubmit, onCancel }: AdminFormProps
           price: parseFloat(formData.price),
           rating: parseFloat(formData.rating),
           country: formData.country || undefined,
-          thumbnailImage: formData.thumbnailImage || undefined,
+          heroImage: heroImageUrl,
+          thumbnailImage: thumbnailImageUrl || undefined,
           whatsIncluded: formData.whatsIncluded ? formData.whatsIncluded.split('\n').filter(item => item.trim()) : [],
         }),
       });
@@ -105,6 +179,122 @@ export default function AdminForm({ target, onSubmit, onCancel }: AdminFormProps
     } finally {
       setLoading(false);
     }
+  };
+
+  const ImageInput = ({ 
+    type, 
+    label, 
+    recommendation, 
+    required = false 
+  }: { 
+    type: 'hero' | 'thumbnail'; 
+    label: string; 
+    recommendation: string; 
+    required?: boolean; 
+  }) => {
+    const mode = type === 'hero' ? heroImageMode : thumbnailImageMode;
+    const setMode = type === 'hero' ? setHeroImageMode : setThumbnailImageMode;
+    const fileInputRef = type === 'hero' ? heroFileInputRef : thumbnailFileInputRef;
+    const preview = type === 'hero' ? heroImagePreview : thumbnailImagePreview;
+    const urlValue = type === 'hero' ? formData.heroImage : formData.thumbnailImage;
+
+    return (
+      <div className="space-y-3">
+        <Label className="text-sm sm:text-base">
+          {label}
+          <span className="text-xs text-gray-500 ml-2">({recommendation})</span>
+          {required && <span className="text-red-500 ml-1">*</span>}
+        </Label>
+        
+        {/* Mode Toggle */}
+        <div className="flex gap-2">
+          <Button
+            type="button"
+            variant={mode === 'url' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setMode('url')}
+            className="flex items-center gap-2"
+          >
+            <Link className="w-4 h-4" />
+            URL
+          </Button>
+          <Button
+            type="button"
+            variant={mode === 'upload' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setMode('upload')}
+            className="flex items-center gap-2"
+          >
+            <Upload className="w-4 h-4" />
+            Upload
+          </Button>
+        </div>
+
+        {/* URL Input */}
+        {mode === 'url' && (
+          <Input
+            name={type === 'hero' ? 'heroImage' : 'thumbnailImage'}
+            type="url"
+            value={urlValue}
+            onChange={handleChange}
+            placeholder={`https://example.com/${type}-image.jpg`}
+            className="min-h-[44px] text-sm sm:text-base"
+            required={required}
+          />
+        )}
+
+        {/* File Upload */}
+        {mode === 'upload' && (
+          <div className="space-y-3">
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={(e) => handleFileChange(type, e.target.files?.[0] || null)}
+              className="hidden"
+            />
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => fileInputRef.current?.click()}
+              className="w-full min-h-[44px] flex items-center gap-2"
+            >
+              <Upload className="w-4 h-4" />
+              Choose Image File
+            </Button>
+            
+            {/* Preview */}
+            {preview && (
+              <div className="relative">
+                <img
+                  src={preview}
+                  alt="Preview"
+                  className="w-full h-32 object-cover rounded-lg border"
+                />
+                <Button
+                  type="button"
+                  variant="destructive"
+                  size="sm"
+                  onClick={() => {
+                    if (type === 'hero') {
+                      setHeroImageFile(null);
+                      setHeroImagePreview('');
+                    } else {
+                      setThumbnailImageFile(null);
+                      setThumbnailImagePreview('');
+                    }
+                    if (fileInputRef.current) fileInputRef.current.value = '';
+                  }}
+                  className="absolute top-2 right-2"
+                >
+                  <X className="w-4 h-4" />
+                </Button>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    );
   };
 
   return (
@@ -239,38 +429,19 @@ export default function AdminForm({ target, onSubmit, onCancel }: AdminFormProps
               </div>
             </div>
 
-            <div>
-              <Label htmlFor="heroImage" className="text-sm sm:text-base">
-                Hero Image URL 
-                <span className="text-xs text-gray-500 ml-2">(Required - Recommended: 1200x800px for detail page)</span>
-              </Label>
-              <Input
-                id="heroImage"
-                name="heroImage"
-                type="url"
-                value={formData.heroImage}
-                onChange={handleChange}
-                placeholder="https://example.com/hero-image.jpg"
-                className="mt-1 min-h-[44px] text-sm sm:text-base"
-                required
-              />
-            </div>
+            <ImageInput
+              type="hero"
+              label="Hero Image"
+              recommendation="Required - Recommended: 1200x800px for detail page"
+              required={true}
+            />
 
-            <div>
-              <Label htmlFor="thumbnailImage" className="text-sm sm:text-base">
-                Thumbnail Image URL 
-                <span className="text-xs text-gray-500 ml-2">(Optional - Recommended: 400x300px for grid cards)</span>
-              </Label>
-              <Input
-                id="thumbnailImage"
-                name="thumbnailImage"
-                type="url"
-                value={formData.thumbnailImage}
-                onChange={handleChange}
-                placeholder="https://example.com/thumbnail-image.jpg"
-                className="mt-1 min-h-[44px] text-sm sm:text-base"
-              />
-            </div>
+            <ImageInput
+              type="thumbnail"
+              label="Thumbnail Image"
+              recommendation="Optional - Recommended: 400x300px for grid cards"
+              required={false}
+            />
 
             <div>
               <Label htmlFor="whatsIncluded" className="text-sm sm:text-base">What's Included</Label>
