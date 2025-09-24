@@ -3,8 +3,8 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { Star } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Star } from 'lucide-react';
 import { toast } from 'sonner';
 import AdminForm from '@/components/AdminForm';
 import { Plus, Edit, Trash2, Eye, LogOut } from 'lucide-react';
@@ -16,9 +16,12 @@ interface Target {
   description: string;
   price: number;
   image: string;
+  heroImage: string;
+  thumbnailImage?: string;
   location: string;
   rating: number;
   country?: string;
+  whatsIncluded?: string[];
 }
 
 export default function AdminDashboard() {
@@ -286,35 +289,39 @@ export default function AdminDashboard() {
                         {target.rating}/5
                       </div>
                     </div>
-                    <div className="flex flex-col sm:flex-row gap-2">
+                    <div className="flex flex-col gap-2">
                       <Button
                         size="sm"
                         variant="outline"
                         onClick={() => router.push(`/target/${target._id}`)}
-                        className="flex-1 text-xs min-h-[36px]"
+                        className="w-full text-xs min-h-[36px] sm:min-h-[32px]"
                       >
                         <Eye className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
-                        View
+                        <span className="hidden sm:inline">View Details</span>
+                        <span className="sm:hidden">View</span>
                       </Button>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => handleEdit(target)}
-                        className="flex-1 text-xs min-h-[36px]"
-                      >
-                        <Edit className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
-                        Edit
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => handleDelete(target._id)}
-                        className="text-red-600 hover:text-red-700 flex-1 text-xs min-h-[36px]"
-                      >
-                        <Trash2 className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
-                        <span className="hidden sm:inline">Delete</span>
-                        <span className="sm:hidden">Del</span>
-                      </Button>
+                      <div className="flex gap-2">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleEdit(target)}
+                          className="flex-1 text-xs min-h-[36px] sm:min-h-[32px]"
+                        >
+                          <Edit className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
+                          <span className="hidden sm:inline">Edit</span>
+                          <span className="sm:hidden">Ed</span>
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleDelete(target._id)}
+                          className="text-red-600 hover:text-red-700 hover:bg-red-50 flex-1 text-xs min-h-[36px] sm:min-h-[32px]"
+                        >
+                          <Trash2 className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
+                          <span className="hidden sm:inline">Delete</span>
+                          <span className="sm:hidden">Del</span>
+                        </Button>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>

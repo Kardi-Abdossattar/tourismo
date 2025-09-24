@@ -59,7 +59,7 @@ export default function TargetCard({ target }: TargetCardProps) {
           {target.title}
         </h3>
         <p className="text-gray-600 text-sm mb-4 sm:mb-5 line-clamp-2 flex-1">{target.description}</p>
-        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-2 mt-auto">
+        <div className="flex flex-col gap-3 mt-auto">
           <div className="text-xs sm:text-sm text-gray-500 flex items-center gap-1 md:hidden">
             <MapPin className="w-3 h-3 sm:w-4 sm:h-4" />
             <span className="truncate max-w-[200px]">{target.location}</span>
@@ -68,8 +68,8 @@ export default function TargetCard({ target }: TargetCardProps) {
             <MapPin className="w-4 h-4" />
             <span className="truncate max-w-[140px] lg:max-w-[180px] xl:max-w-[220px]">{target.location}</span>
           </div>
-          <Link href={`/target/${target._id}`} className="w-full sm:w-auto">
-            <Button size="sm" className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white shadow min-h-[36px] text-xs sm:text-sm">
+          <Link href={`/target/${target._id}`} className="w-full">
+            <Button size="sm" className="w-full bg-blue-600 hover:bg-blue-700 text-white shadow min-h-[40px] sm:min-h-[36px] text-sm font-medium">
               <span className="hidden sm:inline">View Details</span>
               <span className="sm:hidden">View</span>
             </Button>
