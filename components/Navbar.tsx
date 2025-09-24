@@ -21,9 +21,10 @@ interface PageData {
 
 interface NavbarProps {
   onDestinationsClick?: () => void;
+  onModalStateChange?: (isAnyModalOpen: boolean) => void;
 }
 
-export default function Navbar({ onDestinationsClick }: NavbarProps) {
+export default function Navbar({ onDestinationsClick, onModalStateChange }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [aboutModal, setAboutModal] = useState(false);
   const [contactModal, setContactModal] = useState(false);
@@ -49,6 +50,14 @@ export default function Navbar({ onDestinationsClick }: NavbarProps) {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Track modal state changes and notify parent
+  useEffect(() => {
+    const isAnyModalOpen = aboutModal || contactModal || adminModal;
+    if (onModalStateChange) {
+      onModalStateChange(isAnyModalOpen);
+    }
+  }, [aboutModal, contactModal, adminModal, onModalStateChange]);
 
   const fetchPageData = async (slug: 'about' | 'contact') => {
     setLoading(true);

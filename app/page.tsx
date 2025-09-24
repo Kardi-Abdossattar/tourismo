@@ -38,6 +38,7 @@ export default function Home() {
   });
   const [page, setPage] = useState(1);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [isAnyModalOpen, setIsAnyModalOpen] = useState(false);
   const perPage = 9;
   const destRef = useRef<HTMLDivElement | null>(null);
 
@@ -120,9 +121,17 @@ export default function Home() {
     }
   };
 
+  const handleModalStateChange = (isModalOpen: boolean) => {
+    setIsAnyModalOpen(isModalOpen);
+    // Close filters when modal opens
+    if (isModalOpen && isFilterOpen) {
+      setIsFilterOpen(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-emerald-50">
-      <Navbar onDestinationsClick={handleExploreClick} />
+      <Navbar onDestinationsClick={handleExploreClick} onModalStateChange={handleModalStateChange} />
       {/* Hero Section */}
       <section className="relative h-[100vh] sm:h-[90vh] md:h-[80vh] min-h-[500px] sm:min-h-[560px] w-full overflow-hidden text-white">
         {/* Cinematic background image with slow zoom */}
@@ -220,17 +229,19 @@ export default function Home() {
           </div>
           {/* Filters and Grid Layout */}
           <div className={`flex flex-col lg:flex-row gap-4 lg:gap-6 items-start transition-all duration-300 ${isFilterOpen ? '' : 'relative'}`}>
-            {/* Advanced Filters - Left Side */}
-            <div className={`w-full lg:w-auto ${isFilterOpen ? 'flex-shrink-0' : 'absolute top-0 left-0 z-50'}`}>
-              <AttractionFilters
-                onFilterChange={handleFilterChange}
-                allCountries={Array.from(new Set(targets.map(t => t.country).filter((country): country is string => Boolean(country)))).sort()}
-                maxPrice={Math.max(...targets.map(t => t.price), 10)}
-                onMenuToggle={(isOpen) => {
-                  setIsFilterOpen(isOpen);
-                }}
-              />
-            </div>
+            {/* Advanced Filters - Left Side - Hidden when modals are open */}
+            {!isAnyModalOpen && (
+              <div className={`w-full lg:w-auto ${isFilterOpen ? 'flex-shrink-0' : 'absolute top-0 left-0 z-50'}`}>
+                <AttractionFilters
+                  onFilterChange={handleFilterChange}
+                  allCountries={Array.from(new Set(targets.map(t => t.country).filter((country): country is string => Boolean(country)))).sort()}
+                  maxPrice={Math.max(...targets.map(t => t.price), 10)}
+                  onMenuToggle={(isOpen) => {
+                    setIsFilterOpen(isOpen);
+                  }}
+                />
+              </div>
+            )}
 
             {/* Grid - Right Side */}
             <div className="flex-1 min-w-0 w-full">
