@@ -11,8 +11,9 @@ interface TargetCardProps {
     title: string;
     description: string;
     price: number;
+    image: string;
     thumbnailImage?: string;
-    heroImage: string;
+    heroImage?: string;
     location: string;
     rating: number;
   };
@@ -23,9 +24,16 @@ export default function TargetCard({ target }: TargetCardProps) {
     <Card className="group overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 sm:hover:-translate-y-2 h-full flex flex-col">
       <div className="relative aspect-video overflow-hidden">
         <img
-          src={target.thumbnailImage || target.heroImage}
+          src={target.thumbnailImage || target.heroImage || target.image}
           alt={target.title}
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+          onError={(e) => {
+            // Fallback to the main image if both thumbnail and hero images fail to load
+            const img = e.target as HTMLImageElement;
+            if (img.src !== target.image) {
+              img.src = target.image;
+            }
+          }}
         />
         {/* Gradient overlay on hover */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />

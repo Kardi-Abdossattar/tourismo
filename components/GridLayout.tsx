@@ -6,6 +6,8 @@ interface Target {
   description: string;
   price: number;
   image: string;
+  heroImage?: string;
+  thumbnailImage?: string;
   location: string;
   rating: number;
 }
