@@ -53,27 +53,38 @@ export default function TargetCard({ target }: TargetCardProps) {
           </div>
         </div>
       </div>
-
       <CardContent className="p-4 sm:p-6 flex-1 flex flex-col">
         <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors line-clamp-2">
           {target.title}
         </h3>
         <p className="text-gray-600 text-sm mb-4 sm:mb-5 line-clamp-2 flex-1">{target.description}</p>
         <div className="flex flex-col gap-3 mt-auto">
-          <div className="text-xs sm:text-sm text-gray-500 flex items-center gap-1 md:hidden">
-            <MapPin className="w-3 h-3 sm:w-4 sm:h-4" />
-            <span className="truncate max-w-[200px]">{target.location}</span>
+          {/* Mobile and tablet: stacked layout */}
+          <div className="flex flex-col gap-3 lg:hidden">
+            <div className="text-xs sm:text-sm text-gray-500 flex items-center gap-1">
+              <MapPin className="w-3 h-3 sm:w-4 sm:h-4" />
+              <span className="truncate max-w-[200px]">{target.location}</span>
+            </div>
+            <Link href={`/target/${target._id}`} className="w-full">
+              <Button size="sm" className="w-full bg-blue-600 hover:bg-blue-700 text-white shadow min-h-[40px] sm:min-h-[36px] text-sm font-medium">
+                <span className="hidden sm:inline">View Details</span>
+                <span className="sm:hidden">View</span>
+              </Button>
+            </Link>
           </div>
-          <div className="hidden md:flex text-sm text-gray-500 items-center gap-1">
-            <MapPin className="w-4 h-4" />
-            <span className="truncate max-w-[140px] lg:max-w-[180px] xl:max-w-[220px]">{target.location}</span>
+          
+          {/* Large screens: location left, button right */}
+          <div className="hidden lg:flex items-center justify-between gap-3">
+            <div className="text-sm text-gray-500 flex items-center gap-1 flex-1 min-w-0">
+              <MapPin className="w-4 h-4 flex-shrink-0" />
+              <span className="truncate">{target.location}</span>
+            </div>
+            <Link href={`/target/${target._id}`} className="flex-shrink-0">
+              <Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-white shadow min-h-[36px] text-sm font-medium px-4">
+                View Details
+              </Button>
+            </Link>
           </div>
-          <Link href={`/target/${target._id}`} className="w-full">
-            <Button size="sm" className="w-full bg-blue-600 hover:bg-blue-700 text-white shadow min-h-[40px] sm:min-h-[36px] text-sm font-medium">
-              <span className="hidden sm:inline">View Details</span>
-              <span className="sm:hidden">View</span>
-            </Button>
-          </Link>
         </div>
       </CardContent>
     </Card>
