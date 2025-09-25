@@ -4,10 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\"",
-    "dev:frontend": "next dev",
+    "dev:frontend": "set NODE_ENV=development && next dev",
     "dev:backend": "cd backend && npm run dev",
-    "build": "next build && next export -o out",
-    "start": "next start",
+    "build": "set NODE_ENV=production && next build",
+    "start": "next start -p 3000",
     "lint": "next lint",
     "backend:install": "cd backend && npm install",
     "backend:dev": "cd backend && npm run dev",
