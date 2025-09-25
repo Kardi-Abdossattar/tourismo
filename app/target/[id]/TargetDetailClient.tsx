@@ -8,28 +8,90 @@ import { MapPin, Star, Calendar, Users, Wifi } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import { Target } from '@/types';
 
-export default function TargetDetailClient({ initialTarget, id }: { initialTarget: Target; id: string }) {
-  const [target, setTarget] = useState<Target>(initialTarget);
-  const [loading, setLoading] = useState(false);
+interface TargetDetailClientProps {
+  initialTarget: Target | null;
+  id: string;
+}
+
+export default function TargetDetailClient({ initialTarget, id }: TargetDetailClientProps) {
+  const [target, setTarget] = useState<Target | null>(initialTarget);
+  const [loading, setLoading] = useState(!initialTarget);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Refetch latest target to reflect dynamic updates (image, etc.)
+    // Only fetch if we don't have initial data or need to refresh
     const fetchLatest = async () => {
+      if (!process.env.NEXT_PUBLIC_API_URL) {
+        setError("API URL is not configured");
+        setLoading(false);
+        return;
+      }
+
       try {
         setLoading(true);
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/targets/${id}`, { cache: 'no-store' });
-        if (res.ok) {
-          const fresh = await res.json();
-          setTarget(fresh);
+        setError(null);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/targets/${id}`, { 
+          cache: 'no-store' 
+        });
+        
+        if (!res.ok) {
+          throw new Error(`Failed to fetch: ${res.status} ${res.statusText}`);
         }
+        
+        const fresh = await res.json();
+        setTarget(fresh);
       } catch (e) {
-        // silent fail, keep initial
+        console.error('Error fetching target:', e);
+        setError(e instanceof Error ? e.message : 'Failed to load target');
       } finally {
         setLoading(false);
       }
     };
-    fetchLatest();
-  }, [id]);
+
+    // Only fetch if we don't have initial data
+    if (!initialTarget) {
+      fetchLatest();
+    }
+  }, [id, initialTarget]);
+
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Navbar />
+        <div className="container mx-auto px-4 py-8">
+          <div className="flex items-center justify-center h-64">
+            <div className="animate-pulse text-gray-500">Loading target details...</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error || !target) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Navbar />
+        <div className="container mx-auto px-4 py-8">
+          <div className="bg-red-50 border-l-4 border-red-400 p-4">
+            <div className="flex">
+              <div className="flex-shrink-0">
+                <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div className="ml-3">
+                <p className="text-sm text-red-700">
+                  {error || 'Failed to load target details. Please try again later.'}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
