@@ -7,6 +7,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { MapPin, Star, Calendar, Users, Wifi } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import { Target } from '@/types';
+import { StaticApiService } from '@/lib/static-api';
 
 interface TargetDetailClientProps {
   initialTarget: Target | null;
@@ -21,24 +22,16 @@ export default function TargetDetailClient({ initialTarget, id }: TargetDetailCl
   useEffect(() => {
     // Only fetch if we don't have initial data or need to refresh
     const fetchLatest = async () => {
-      if (!process.env.NEXT_PUBLIC_API_URL) {
-        setError("API URL is not configured");
-        setLoading(false);
-        return;
-      }
-
       try {
         setLoading(true);
         setError(null);
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/targets/${id}`, { 
-          cache: 'no-store' 
-        });
         
-        if (!res.ok) {
-          throw new Error(`Failed to fetch: ${res.status} ${res.statusText}`);
+        const fresh = await StaticApiService.getTargetById(id);
+        
+        if (!fresh) {
+          throw new Error('Target not found');
         }
         
-        const fresh = await res.json();
         setTarget(fresh);
       } catch (e) {
         console.error('Error fetching target:', e);

@@ -1,42 +1,9 @@
 import BookingClient, { Target } from './BookingClient';
+import { StaticApiService } from '@/lib/static-api';
 
 export async function generateStaticParams() {
-  // If we don't have an API URL during build, return some default paths
-  if (!process.env.NEXT_PUBLIC_API_URL) {
-    console.warn('No API URL found for booking page. Using default paths for static generation.');
-    // Return some default paths that are likely to exist
-    return [
-      { id: '1' },
-      { id: '2' },
-      { id: '3' },
-    ];
-  }
-
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/targets`, {
-      next: { revalidate: 3600 } // Revalidate every hour
-    });
-    
-    if (!res.ok) {
-      console.error('Failed to fetch targets for booking static generation:', res.statusText);
-      // Return some default paths as fallback
-      return [
-        { id: '1' },
-        { id: '2' },
-        { id: '3' },
-      ];
-    }
-    
-    const targets: Target[] = await res.json();
-    
-    // If no targets, return default paths
-    if (!targets || targets.length === 0) {
-      return [
-        { id: '1' },
-        { id: '2' },
-        { id: '3' },
-      ];
-    }
+    const targets = await StaticApiService.getTargets();
     
     // Return the actual target IDs for static generation
     return targets.map((t) => ({
@@ -46,30 +13,18 @@ export async function generateStaticParams() {
     console.error('Error during booking static generation:', e);
     // Return some default paths as fallback
     return [
-      { id: '1' },
-      { id: '2' },
-      { id: '3' },
+      { id: '67890abcdef1234567890001' },
+      { id: '67890abcdef1234567890002' },
+      { id: '67890abcdef1234567890003' },
     ];
   }
 }
 
 export default async function BookingPage({ params }: { params: { id: string } }) {
-  // If we don't have an API URL, show a loading state that will trigger client-side fetch
-  if (!process.env.NEXT_PUBLIC_API_URL) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-      </div>
-    );
-  }
-
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/targets/${params.id}`, {
-      next: { revalidate: 60 }, // Revalidate every 60 seconds
-    });
+    const target = await StaticApiService.getTargetById(params.id);
     
-    if (!res.ok) {
-      console.error(`Failed to fetch target ${params.id} for booking:`, res.statusText);
+    if (!target) {
       return (
         <div className="min-h-screen flex items-center justify-center">
           <div className="text-center">
@@ -80,7 +35,6 @@ export default async function BookingPage({ params }: { params: { id: string } }
       );
     }
     
-    const target: Target = await res.json();
     return <BookingClient target={target} />;
   } catch (error) {
     console.error('Error fetching target for booking:', error);

@@ -1,0 +1,244 @@
+{
+  "targets": [
+    {
+      "_id": "67890abcdef1234567890001",
+      "title": "Santorini Paradise Resort",
+      "description": "Experience the magic of Santorini with breathtaking sunset views, pristine white architecture, and crystal-clear Aegean waters. This luxury resort offers an unforgettable Greek island experience with world-class amenities, infinity pools overlooking the caldera, and authentic Mediterranean cuisine. Wake up to stunning sunrises, explore ancient ruins, and indulge in the finest Greek hospitality.",
+      "price": 450,
+      "image": "https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?q=80&w=2000&auto=format&fit=crop",
+      "heroImage": "https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e?q=80&w=2000&auto=format&fit=crop",
+      "smallImage": "https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?q=80&w=800&auto=format&fit=crop",
+      "location": "Santorini, Greece",
+      "country": "Greece",
+      "rating": 4.9,
+      "reviews": 1247,
+      "duration": "7 days",
+      "category": "Luxury Resort",
+      "featured": true,
+      "amenities": [
+        "Infinity Pool",
+        "Private Beach Access",
+        "Spa & Wellness Center",
+        "Fine Dining Restaurant",
+        "Airport Transfer",
+        "Concierge Service",
+        "WiFi",
+        "Air Conditioning"
+      ],
+      "whatsIncluded": [
+        "Luxury accommodation with caldera view",
+        "Daily breakfast buffet",
+        "Airport transfers",
+        "Welcome cocktail",
+        "Access to all resort facilities",
+        "24/7 concierge service"
+      ],
+      "gallery": [
+        "https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1544551763-46a013bb70d5?q=80&w=1200&auto=format&fit=crop"
+      ],
+      "createdAt": "2024-01-15T10:30:00Z"
+    },
+    {
+      "_id": "67890abcdef1234567890002",
+      "title": "Bali Tropical Villa",
+      "description": "Escape to paradise in this stunning private villa nestled in the lush tropical landscapes of Ubud, Bali. Surrounded by rice terraces and jungle views, this eco-luxury retreat offers the perfect blend of traditional Balinese architecture and modern comfort. Enjoy private pools, traditional spa treatments, and authentic Indonesian cuisine while immersing yourself in the spiritual heart of Bali.",
+      "price": 320,
+      "image": "https://images.unsplash.com/photo-1537953773345-d172ccf13cf1?q=80&w=2000&auto=format&fit=crop",
+      "heroImage": "https://images.unsplash.com/photo-1544551763-46a013bb70d5?q=80&w=2000&auto=format&fit=crop",
+      "smallImage": "https://images.unsplash.com/photo-1537953773345-d172ccf13cf1?q=80&w=800&auto=format&fit=crop",
+      "location": "Ubud, Bali",
+      "country": "Indonesia",
+      "rating": 4.8,
+      "reviews": 892,
+      "duration": "5 days",
+      "category": "Private Villa",
+      "featured": true,
+      "amenities": [
+        "Private Pool",
+        "Jungle View",
+        "Traditional Spa",
+        "Yoga Pavilion",
+        "Organic Garden",
+        "Cultural Tours",
+        "WiFi",
+        "Air Conditioning"
+      ],
+      "whatsIncluded": [
+        "Private villa with pool",
+        "Daily housekeeping",
+        "Traditional Balinese breakfast",
+        "Airport pickup",
+        "Complimentary yoga session",
+        "Cultural tour guide"
+      ],
+      "gallery": [
+        "https://images.unsplash.com/photo-1544551763-46a013bb70d5?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1537953773345-d172ccf13cf1?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1559827260-dc66d52bef19?q=80&w=1200&auto=format&fit=crop"
+      ],
+      "createdAt": "2024-01-20T14:15:00Z"
+    },
+    {
+      "_id": "67890abcdef1234567890003",
+      "title": "Swiss Alpine Chalet",
+      "description": "Discover the magic of the Swiss Alps in this charming traditional chalet located in the heart of Zermatt. With panoramic views of the iconic Matterhorn, this cozy retreat offers world-class skiing in winter and hiking adventures in summer. Enjoy authentic Swiss hospitality, fondue by the fireplace, and access to some of Europe's most spectacular mountain scenery.",
+      "price": 280,
+      "image": "https://images.unsplash.com/photo-1551524164-6cf2ac531400?q=80&w=2000&auto=format&fit=crop",
+      "heroImage": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=2000&auto=format&fit=crop",
+      "smallImage": "https://images.unsplash.com/photo-1551524164-6cf2ac531400?q=80&w=800&auto=format&fit=crop",
+      "location": "Zermatt, Switzerland",
+      "country": "Switzerland",
+      "rating": 4.7,
+      "reviews": 654,
+      "duration": "6 days",
+      "category": "Mountain Chalet",
+      "featured": false,
+      "amenities": [
+        "Matterhorn View",
+        "Ski Access",
+        "Fireplace",
+        "Mountain Hiking",
+        "Traditional Sauna",
+        "Alpine Cuisine",
+        "WiFi",
+        "Heating"
+      ],
+      "whatsIncluded": [
+        "Traditional Alpine chalet",
+        "Daily continental breakfast",
+        "Ski equipment rental",
+        "Mountain guide service",
+        "Welcome Swiss chocolate",
+        "Access to hiking trails"
+      ],
+      "gallery": [
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1551524164-6cf2ac531400?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1486022119026-e3c3b5d2a3c2?q=80&w=1200&auto=format&fit=crop"
+      ],
+      "createdAt": "2024-01-25T09:45:00Z"
+    },
+    {
+      "_id": "67890abcdef1234567890004",
+      "title": "Maldives Overwater Bungalow",
+      "description": "Experience ultimate luxury in this exclusive overwater bungalow in the pristine Maldives. Wake up to crystal-clear turquoise waters, step directly into the ocean from your private deck, and enjoy unparalleled privacy in one of the world's most beautiful destinations. With world-class diving, pristine coral reefs, and five-star service, this is paradise redefined.",
+      "price": 650,
+      "image": "https://images.unsplash.com/photo-1544551763-77ef2d0cfc6c?q=80&w=2000&auto=format&fit=crop",
+      "heroImage": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=2000&auto=format&fit=crop",
+      "smallImage": "https://images.unsplash.com/photo-1544551763-77ef2d0cfc6c?q=80&w=800&auto=format&fit=crop",
+      "location": "Malé Atoll, Maldives",
+      "country": "Maldives",
+      "rating": 5.0,
+      "reviews": 423,
+      "duration": "4 days",
+      "category": "Overwater Villa",
+      "featured": true,
+      "amenities": [
+        "Overwater Deck",
+        "Direct Ocean Access",
+        "Private Butler",
+        "Snorkeling Gear",
+        "Sunset Dining",
+        "Spa Treatments",
+        "WiFi",
+        "Air Conditioning"
+      ],
+      "whatsIncluded": [
+        "Luxury overwater bungalow",
+        "All meals included",
+        "Seaplane transfers",
+        "Snorkeling equipment",
+        "Sunset cruise",
+        "Personal butler service"
+      ],
+      "gallery": [
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1544551763-77ef2d0cfc6c?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?q=80&w=1200&auto=format&fit=crop"
+      ],
+      "createdAt": "2024-02-01T16:20:00Z"
+    },
+    {
+      "_id": "67890abcdef1234567890005",
+      "title": "Tokyo Modern Apartment",
+      "description": "Immerse yourself in the vibrant energy of Tokyo from this sleek, modern apartment in the heart of Shibuya. Experience the perfect blend of traditional Japanese culture and cutting-edge urban life. Walk to iconic landmarks, enjoy world-class cuisine, and discover the fascinating contrasts of Japan's capital city. This stylish accommodation offers all modern amenities with authentic Japanese touches.",
+      "price": 180,
+      "image": "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?q=80&w=2000&auto=format&fit=crop",
+      "heroImage": "https://images.unsplash.com/photo-1513407030348-c983a97b98d8?q=80&w=2000&auto=format&fit=crop",
+      "smallImage": "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?q=80&w=800&auto=format&fit=crop",
+      "location": "Shibuya, Tokyo",
+      "country": "Japan",
+      "rating": 4.6,
+      "reviews": 1156,
+      "duration": "3 days",
+      "category": "City Apartment",
+      "featured": false,
+      "amenities": [
+        "City Center Location",
+        "Modern Kitchen",
+        "High-Speed WiFi",
+        "Subway Access",
+        "Traditional Bath",
+        "City Views",
+        "Air Conditioning",
+        "24/7 Security"
+      ],
+      "whatsIncluded": [
+        "Modern apartment in Shibuya",
+        "Welcome Japanese tea set",
+        "Subway day passes",
+        "City guidebook",
+        "24/7 concierge support",
+        "Kitchen amenities"
+      ],
+      "gallery": [
+        "https://images.unsplash.com/photo-1513407030348-c983a97b98d8?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1542051841857-5f90071e7989?q=80&w=1200&auto=format&fit=crop"
+      ],
+      "createdAt": "2024-02-05T11:10:00Z"
+    },
+    {
+      "_id": "67890abcdef1234567890006",
+      "title": "Tuscany Wine Estate",
+      "description": "Discover the romance of Tuscany at this historic wine estate surrounded by rolling hills, vineyards, and olive groves. This beautifully restored villa offers an authentic Italian experience with wine tastings, cooking classes, and breathtaking countryside views. Explore medieval towns, enjoy farm-to-table dining, and create unforgettable memories in the heart of Italy's most beloved region.",
+      "price": 380,
+      "image": "https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?q=80&w=2000&auto=format&fit=crop",
+      "heroImage": "https://images.unsplash.com/photo-1516483638261-f4dbaf036963?q=80&w=2000&auto=format&fit=crop",
+      "smallImage": "https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?q=80&w=800&auto=format&fit=crop",
+      "location": "Chianti, Tuscany",
+      "country": "Italy",
+      "rating": 4.8,
+      "reviews": 743,
+      "duration": "5 days",
+      "category": "Wine Estate",
+      "featured": true,
+      "amenities": [
+        "Wine Tasting",
+        "Cooking Classes",
+        "Vineyard Tours",
+        "Olive Grove",
+        "Historic Villa",
+        "Farm-to-Table Dining",
+        "WiFi",
+        "Swimming Pool"
+      ],
+      "whatsIncluded": [
+        "Historic villa accommodation",
+        "Daily wine tasting",
+        "Cooking class with chef",
+        "Vineyard tour",
+        "Traditional Tuscan breakfast",
+        "Airport transfer from Florence"
+      ],
+      "gallery": [
+        "https://images.unsplash.com/photo-1516483638261-f4dbaf036963?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1533105079780-92b9be482077?q=80&w=1200&auto=format&fit=crop"
+      ],
+      "createdAt": "2024-02-10T13:30:00Z"
+    }
+  ]
+}

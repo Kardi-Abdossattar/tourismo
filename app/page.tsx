@@ -6,7 +6,7 @@ import GridLayout from '@/components/GridLayout';
 import Navbar from '@/components/Navbar';
 import { Button } from '@/components/ui/button';
 import { MapPin, Globe, Star } from 'lucide-react';
-import { getTargets } from '@/lib/api';
+import { StaticApiService } from '@/lib/static-api';
 import { AttractionFilters, FilterState } from '@/components/AttractionFilters';
 import { isMetaMaskAvailable, ensureGanacheNetwork, connectWallet, sendEth } from '@/lib/web3';
 import { toast } from 'sonner';
@@ -49,14 +49,8 @@ export default function Home() {
   const fetchTargets = async (filterParams?: any) => {
     try {
       setLoading(true);
-      const data = await getTargets(filterParams);
-      
-      // Handle both old format (array) and new format (object with targets)
-      if (Array.isArray(data)) {
-        setTargets(data);
-      } else {
-        setTargets(data.targets || []);
-      }
+      const data = await StaticApiService.getTargets(filterParams);
+      setTargets(data);
     } catch (error) {
       console.error('Error fetching targets:', error);
     } finally {

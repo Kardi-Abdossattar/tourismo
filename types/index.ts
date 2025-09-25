@@ -11,12 +11,17 @@ export interface Target {
   amenities?: string[];
   duration?: string;
   whatsIncluded?: string[];
+  reviews?: number;
+  category?: string;
+  featured?: boolean;
+  gallery?: string[];
+  country?: string;
+  createdAt?: string;
 }
 
 export interface Booking {
   _id: string;
   targetId: string;
-  guestName: string;
   email: string;
   walletAddress: string;
   txHash: string;
