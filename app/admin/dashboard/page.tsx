@@ -22,6 +22,7 @@ interface Target {
   rating: number;
   country?: string;
   whatsIncluded?: string[];
+  featured?: boolean;
 }
 
 export default function AdminDashboard() {
@@ -110,6 +111,13 @@ export default function AdminDashboard() {
     if (currentFilters.countries.length > 0) {
       result = result.filter((t) => 
         t.country && currentFilters.countries.includes(t.country)
+      );
+    }
+
+    // Featured filter
+    if (currentFilters.featured !== null) {
+      result = result.filter((t) => 
+        t.featured === currentFilters.featured
       );
     }
 
