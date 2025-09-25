@@ -13,13 +13,19 @@ const nextConfig = {
   
   // Configure image optimization
   images: {
-    unoptimized: isProd, // Required for static export
+    unoptimized: true, // Always unoptimized for static export
     domains: ['*'], // Allow all domains for images
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
+    ],
   },
   
   // Environment variables
   env: {
-    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || '',
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000',
   },
   
   // TypeScript and ESLint configurations
@@ -35,6 +41,21 @@ const nextConfig = {
   
   // Enable SWC minification for better performance
   swcMinify: true,
+  
+  // Disable server components external packages
+  experimental: {
+    serverComponentsExternalPackages: [],
+  },
+  
+  // Disable static page generation for all pages by default
+  // Pages will need to explicitly opt-in to static generation
+  generateEtags: false,
 };
+
+// For production builds, ensure static export is enabled
+if (isProd) {
+  nextConfig.output = 'export';
+  nextConfig.images.unoptimized = true;
+}
 
 module.exports = nextConfig;
