@@ -48,7 +48,6 @@ export default function TargetDetailClient({ initialTarget, id }: { initialTarge
             }}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
