@@ -6,20 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { MapPin, Star, Calendar, Users, Wifi } from 'lucide-react';
 import Navbar from '@/components/Navbar';
-
-interface Target {
-  _id: string;
-  title: string;
-  description: string;
-  price: number;
-  thumbnailImage?: string;
-  heroImage: string;
-  location: string;
-  rating: number;
-  amenities: string[];
-  whatsIncluded?: string[];
-  duration: string;
-}
+import { Target } from '@/types';
 
 export default function TargetDetailClient({ initialTarget, id }: { initialTarget: Target; id: string }) {
   const [target, setTarget] = useState<Target>(initialTarget);
@@ -48,15 +35,19 @@ export default function TargetDetailClient({ initialTarget, id }: { initialTarge
     <div className="min-h-screen bg-gray-50">
       <Navbar />
       <div className="container mx-auto px-4 py-8">
-        <div className="relative h-96 md:h-[500px] rounded-2xl overflow-hidden mb-8">
-          <img src={target.heroImage} alt={target.title} className="w-full h-full object-cover" />
+        <div className="relative h-64 md:h-96 rounded-lg overflow-hidden mb-6">
+          <img
+            src={target.heroImage || target.image}
+            alt={target.title}
+            className="w-full h-full object-cover"
+            onError={(e) => {
+              // Fallback to the main image if heroImage fails to load
+              if (target.image && e.currentTarget.src !== target.image) {
+                e.currentTarget.src = target.image;
+              }
+            }}
+          />
           <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-          <div className="absolute bottom-6 left-6 text-white">
-            <h1 className="text-4xl md:text-5xl font-bold mb-2">{target.title}</h1>
-            <div className="flex items-center space-x-2">
-              <MapPin className="w-5 h-5" />
-              <span className="text-lg">{target.location}</span>
-            </div>
           </div>
         </div>
 

@@ -4,10 +4,13 @@ export interface Target {
   description: string;
   price: number;
   image: string;
+  heroImage?: string;
+  smallImage?: string;
   location: string;
   rating: number;
   amenities?: string[];
   duration?: string;
+  whatsIncluded?: string[];
 }
 
 export interface Booking {
