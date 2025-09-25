@@ -10,16 +10,14 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
-import { Star, MapPin, ArrowUpDown, DollarSign, X, Globe, Building2 } from 'lucide-react';
-import { useEffect, useState } from 'react';
-import { getCountries, getCitiesByCountry } from '@/lib/api';
+import { Star, MapPin, ArrowUpDown, DollarSign, X } from 'lucide-react';
 
 export type SortOption = 'price-asc' | 'price-desc' | 'rating-desc' | 'title-asc' | 'title-desc';
 
 interface TargetFiltersProps {
   search: string;
   setSearch: (value: string) => void;
-  sortBy: string;
+  sortBy: SortOption;
   setSortBy: (value: SortOption) => void;
   priceRange: [number, number];
   setPriceRange: (value: [number, number]) => void;
@@ -29,10 +27,6 @@ interface TargetFiltersProps {
   allLocations: string[];
   minRating: number;
   setMinRating: (value: number) => void;
-  selectedCountry: string;
-  setSelectedCountry: (country: string) => void;
-  selectedCity: string;
-  setSelectedCity: (city: string) => void;
   clearFilters: () => void;
 }
 
@@ -49,52 +43,8 @@ export function TargetFilters({
   allLocations,
   minRating,
   setMinRating,
-  selectedCountry,
-  setSelectedCountry,
-  selectedCity,
-  setSelectedCity,
   clearFilters
 }: TargetFiltersProps) {
-  const [countries, setCountries] = useState<string[]>([]);
-  const [cities, setCities] = useState<string[]>([]);
-  const [loadingCities, setLoadingCities] = useState(false);
-
-  // Load countries on mount
-  useEffect(() => {
-    const loadCountries = async () => {
-      try {
-        const data = await getCountries();
-        setCountries(data);
-      } catch (error) {
-        console.error('Error loading countries:', error);
-      }
-    };
-    loadCountries();
-  }, []);
-
-  // Load cities when country changes
-  useEffect(() => {
-    if (selectedCountry) {
-      const loadCities = async () => {
-        try {
-          setLoadingCities(true);
-          const data = await getCitiesByCountry(selectedCountry);
-          setCities(data);
-          // Reset city when country changes
-          setSelectedCity('');
-        } catch (error) {
-          console.error('Error loading cities:', error);
-        } finally {
-          setLoadingCities(false);
-        }
-      };
-      loadCities();
-    } else {
-      setCities([]);
-      setSelectedCity('');
-    }
-  }, [selectedCountry]);
-
   const toggleLocation = (location: string) => {
     setSelectedLocations(
       selectedLocations.includes(location)
@@ -108,11 +58,7 @@ export function TargetFilters({
     sortBy !== 'rating-desc' || 
     priceRange[1] !== maxPrice || 
     selectedLocations.length > 0 ||
-    minRating > 0 ||
-    selectedCountry ||
-    selectedCity;
-
-  // clearFilters is now passed as a prop from the parent component
+    minRating > 0;
 
   return (
     <div className="space-y-6 bg-white p-6 rounded-lg shadow-sm border border-gray-100">
@@ -141,53 +87,6 @@ export function TargetFilters({
             onChange={(e) => setSearch(e.target.value)}
             className="w-full"
           />
-        </div>
-
-        {/* Country Selector */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Country</label>
-          <Select
-            value={selectedCountry}
-            onValueChange={setSelectedCountry}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Select a country" />
-            </SelectTrigger>
-            <SelectContent>
-              {countries.map((country) => (
-                <SelectItem key={country} value={country}>
-                  <div className="flex items-center">
-                    <Globe className="w-4 h-4 mr-2 text-blue-500" />
-                    {country}
-                  </div>
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-
-        {/* City Selector */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">City</label>
-          <Select
-            value={selectedCity}
-            onValueChange={setSelectedCity}
-            disabled={!selectedCountry || loadingCities}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder={loadingCities ? 'Loading cities...' : 'Select a city'} />
-            </SelectTrigger>
-            <SelectContent>
-              {cities.map((city) => (
-                <SelectItem key={city} value={city}>
-                  <div className="flex items-center">
-                    <Building2 className="w-4 h-4 mr-2 text-blue-500" />
-                    {city}
-                  </div>
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
         </div>
       </div>
 
