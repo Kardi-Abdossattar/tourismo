@@ -19,7 +19,7 @@ export interface FilterState {
   countries: string[];
   sortBy: 'title' | 'price' | 'rating' | 'location' | 'createdAt';
   sortOrder: 'asc' | 'desc';
-  featured: boolean | null; // null = all, true = featured only, false = non-featured only
+  featured?: boolean | null; // null = all, true = featured only, false = non-featured only
 }
 
 interface AttractionFiltersProps {
@@ -118,6 +118,7 @@ export function AttractionFilters({
       countries: [],
       sortBy: 'createdAt',
       sortOrder: 'desc',
+      featured: null,
     };
     setLocalFilters(newFilters);
     onFilterChange(newFilters);
