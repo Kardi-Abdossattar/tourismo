@@ -1,12 +1,20 @@
-# Tourismo – Ethereum Reservation Payments Integration
+# Tourismo - Travel Booking Platform
 
-This project now supports on-chain ETH payments for reservations using a simple Solidity contract, Truffle, Ganache, ethers.js (backend + frontend), and MetaMask.
+A modern travel booking platform built with Next.js, TypeScript, and Tailwind CSS. This is a static demo version of the application.
+
+## Demo Access
+
+You can access the admin dashboard with the following demo credentials:
+
+- **Username:** admin
+- **Password:** password
+
+> Note: This is a static demo, so all changes are client-side only and will be reset on page refresh.
 
 ## What was added
 - `contracts/ReservationPayment.sol`: Smart contract to accept ETH per bookingId and emit events.
 - `migrations/1_deploy_reservation_payment.js`: Truffle migration.
 - `truffle-config.js`: Truffle config (Solc 0.8.20, Ganache network).
-- Backend blockchain integration:
   - `backend/config/blockchain.js`
   - `backend/controllers/paymentController.js`
   - `backend/routes/paymentRoutes.js`
@@ -92,8 +100,38 @@ This project now supports on-chain ETH payments for reservations using a simple 
 - Security: Never use real funds on Ganache. Do not commit secrets.
 - If `build/contracts/ReservationPayment.json` is missing, run `npm run truffle:compile` and `npm run truffle:migrate`.
 
+## GitHub Pages Deployment
+
+This project is configured for automatic deployment to GitHub Pages using GitHub Actions.
+
+### Setup Instructions:
+
+1. **Push to GitHub**: Make sure your code is pushed to a GitHub repository.
+
+2. **Enable GitHub Pages**:
+   - Go to your repository settings
+   - Navigate to "Pages" section
+   - Under "Source", select "GitHub Actions"
+
+3. **Automatic Deployment**:
+   - Every push to `main` or `master` branch will trigger automatic deployment
+   - The workflow builds the static site and deploys it to GitHub Pages
+   - Your site will be available at: `https://yourusername.github.io/tourismo`
+
+### Manual Deployment:
+If you want to deploy manually:
+```bash
+npm run deploy
+```
+
+### Configuration Notes:
+- The site is configured with base path `/tourismo` for GitHub Pages
+- All images and assets are handled with custom loader for proper paths
+- Static export is enabled for GitHub Pages compatibility
+
 ## Troubleshooting
 - MetaMask not detected: ensure the extension is installed; the UI will show a warning.
 - Contract address error: set `CONTRACT_ADDRESS` in `backend/.env` to the address from Truffle migration.
 - Network mismatch: ensure MetaMask is connected to the same network as Ganache (RPC `127.0.0.1:7545`).
 - CORS/Fetch issues: backend runs on port 5000 with CORS enabled; check console logs.
+- GitHub Pages deployment issues: Check the Actions tab in your repository for build logs.

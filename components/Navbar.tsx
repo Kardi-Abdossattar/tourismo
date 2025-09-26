@@ -105,35 +105,25 @@ export default function Navbar({ onDestinationsClick, onModalStateChange }: Navb
 
   const handleAdminLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoginLoading(true);
-
-    try {
-      const response = await fetch('http://localhost:5000/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, password }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        localStorage.setItem('token', data.token);
-        toast.success('Login successful!');
-        setAdminModal(false);
-        setUsername('');
-        setPassword('');
+    
+    // For demo purposes, show a success message and redirect to admin dashboard
+    if (username === 'admin' && password === 'password') {
+      // In a real app, you would verify credentials with a backend
+      localStorage.setItem('token', 'demo-token-' + Date.now());
+      toast.success('Demo login successful! Redirecting to dashboard...');
+      setAdminModal(false);
+      setUsername('');
+      setPassword('');
+      
+      // Small delay for better UX
+      setTimeout(() => {
         router.push('/admin/dashboard');
-      } else {
-        toast.error(data.message || 'Login failed');
-      }
-    } catch (error) {
-      console.error('Login error:', error);
-      toast.error('Login failed. Please try again.');
-    } finally {
-      setLoginLoading(false);
+      }, 1000);
+    } else {
+      toast.error('Invalid credentials. Use admin/password for demo access.');
     }
+    
+    setLoginLoading(false);
   };
 
   const closeModals = () => {

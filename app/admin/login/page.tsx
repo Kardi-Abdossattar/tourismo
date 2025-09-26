@@ -36,24 +36,18 @@ export default function AdminLogin() {
     setLoading(true);
     
     try {
-      const response = await fetch('http://localhost:5000/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, password }),
-        credentials: 'include', // Important for cookies
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        toast.success('Login successful!');
-        // The server should set an HTTP-only cookie
-        // Redirect to the dashboard or the originally requested page
-        window.location.href = redirectTo;
+      // Demo mode - check for demo credentials
+      if (username === 'admin' && password === 'password') {
+        // Set a demo token in localStorage for demo purposes
+        localStorage.setItem('token', 'demo-token-' + Date.now());
+        toast.success('Demo login successful! Redirecting to dashboard...');
+        
+        // Small delay for better UX
+        setTimeout(() => {
+          window.location.href = redirectTo;
+        }, 1000);
       } else {
-        toast.error(data.message || 'Login failed. Please check your credentials.');
+        toast.error('Invalid credentials. Use admin/password for demo access.');
       }
     } catch (error) {
       console.error('Login error:', error);
