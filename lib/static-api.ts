@@ -4,7 +4,14 @@
 // Import JSON data - we'll load it dynamically to avoid build issues
 const loadTargetsData = async () => {
   try {
-    const response = await fetch('/data/tourismo.targets.json');
+    // For GitHub Pages, we need to use the repository name as base path
+    const basePath = process.env.NODE_ENV === 'production' ? '/tourismo' : '';
+    const response = await fetch(`${basePath}/data/tourismo.targets.json`);
+    
+    if (!response.ok) {
+      throw new Error(`Failed to fetch targets: ${response.status}`);
+    }
+    
     return await response.json();
   } catch (error) {
     console.error('Failed to load targets data:', error);
