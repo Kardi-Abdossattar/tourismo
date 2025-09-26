@@ -36,22 +36,17 @@ export default function AdminLogin() {
     setLoading(true);
     
     try {
-      // Demo mode - check for demo credentials
-      if (username === 'admin' && password === 'password') {
-        // Set a demo token in localStorage for demo purposes
-        localStorage.setItem('token', 'demo-token-' + Date.now());
-        toast.success('Demo login successful! Redirecting to dashboard...');
-        
-        // Small delay for better UX
-        setTimeout(() => {
-          window.location.href = redirectTo;
-        }, 1000);
-      } else {
-        toast.error('Invalid credentials. Use admin/password for demo access.');
-      }
+      // Accept any credentials for demo purposes
+      localStorage.setItem('token', 'demo-token-' + Date.now());
+      toast.success('Login successful! Redirecting to dashboard...');
+      
+      // Small delay for better UX
+      setTimeout(() => {
+        window.location.href = redirectTo;
+      }, 1000);
     } catch (error) {
       console.error('Login error:', error);
-      toast.error('Login failed. Please try again.');
+      toast.error('An error occurred during login.');
     } finally {
       setLoading(false);
     }

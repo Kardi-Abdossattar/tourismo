@@ -106,22 +106,17 @@ export default function Navbar({ onDestinationsClick, onModalStateChange }: Navb
   const handleAdminLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // For demo purposes, show a success message and redirect to admin dashboard
-    if (username === 'admin' && password === 'password') {
-      // In a real app, you would verify credentials with a backend
-      localStorage.setItem('token', 'demo-token-' + Date.now());
-      toast.success('Demo login successful! Redirecting to dashboard...');
-      setAdminModal(false);
-      setUsername('');
-      setPassword('');
-      
-      // Small delay for better UX
-      setTimeout(() => {
-        router.push('/admin/dashboard');
-      }, 1000);
-    } else {
-      toast.error('Invalid credentials. Use admin/password for demo access.');
-    }
+    // Accept any credentials for demo purposes
+    localStorage.setItem('token', 'demo-token-' + Date.now());
+    toast.success('Login successful! Redirecting to dashboard...');
+    setAdminModal(false);
+    setUsername('');
+    setPassword('');
+    
+    // Small delay for better UX
+    setTimeout(() => {
+      router.push('/admin/dashboard');
+    }, 1000);
     
     setLoginLoading(false);
   };
