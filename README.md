@@ -1,30 +1,87 @@
-# Tourismo - Travel Booking Platform
+# Tourismo - Frontend Demo
 
-A modern travel booking platform built with Next.js, TypeScript, and Tailwind CSS. This is a static demo version of the application.
+> **Note:** This is a **static demo version** of the Tourismo travel booking platform. For the full version with Ethereum payment integration, please check the `main` branch.
 
-## Demo Access
+A modern, responsive travel booking platform built with Next.js, TypeScript, and Tailwind CSS. This is a frontend-only demo that showcases the UI/UX of the application without requiring any backend services.
 
-You can access the admin dashboard with the following demo credentials:
+## 🌟 Features
 
-- **Username:** admin
-- **Password:** password
+- **Fully Responsive** - Works on mobile, tablet, and desktop
+- **Modern UI/UX** - Clean, intuitive interface with smooth animations
+- **Interactive Components** - See the UI in action with sample data
+- **No Backend Required** - Everything runs in the browser
 
-> Note: This is a static demo, so all changes are client-side only and will be reset on page refresh.
+## 🚀 Getting Started
 
-## What was added
-- `contracts/ReservationPayment.sol`: Smart contract to accept ETH per bookingId and emit events.
-- `migrations/1_deploy_reservation_payment.js`: Truffle migration.
-- `truffle-config.js`: Truffle config (Solc 0.8.20, Ganache network).
-  - `backend/config/blockchain.js`
-  - `backend/controllers/paymentController.js`
-  - `backend/routes/paymentRoutes.js`
-  - Mounted in `backend/server.js` under `/api/payment`
-  - Added seeding path fix for Truffle build artifact
-- Frontend integration:
-  - Updated booking flow `app/booking/[id]/page.tsx` to call the contract via MetaMask and store tx details
-  - Web3 helpers: `lib/web3.ts` now includes `sendContractPayment`, `isMetaMaskAvailable`
-  - API helpers: `lib/api.ts` now includes `createPayment` and `getPaymentStatus`
-- Admin: `app/admin/bookings/page.tsx` shows payment status (paid/unpaid) by querying the blockchain via backend.
+### Prerequisites
+- Node.js 16+ and npm/yarn
+
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/Kardi-Abdossattar/tourismo.git
+   cd tourismo
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   # or
+   yarn
+   ```
+
+3. Run the development server:
+   ```bash
+   npm run dev
+   # or
+   yarn dev
+   ```
+
+4. Open [http://localhost:3000](http://localhost:3000) in your browser
+
+## 🔐 Demo Access
+
+You can access all features with any credentials:
+- **Username:** (any value)
+- **Password:** (any value)
+
+> ℹ️ **Note:** This is a client-side only demo. All changes will be reset on page refresh.
+
+## 🛠️ Tech Stack
+
+- **Frontend:** Next.js 13+ (App Router)
+- **Styling:** Tailwind CSS
+- **Icons:** Lucide React
+- **State Management:** React Context API
+- **Form Handling:** React Hook Form
+- **Animations:** Framer Motion
+
+## 📂 Project Structure
+
+```
+/
+├── app/                  # App router pages and layouts
+├── components/           # Reusable UI components
+├── lib/                  # Utility functions and configs
+├── public/               # Static assets
+│   └── data/             # Sample data files
+└── styles/               # Global styles
+```
+
+## 📝 Notes
+
+- This is a frontend-only demo. No real transactions or bookings are processed.
+- The admin dashboard is fully functional but doesn't persist changes.
+- All images are loaded from public assets.
+
+## 🌐 Live Demo
+
+Check out the live demo at: [GitHub Pages](https://kardi-abdossattar.github.io/tourismo/)
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Prerequisites
 - Node.js LTS
