@@ -1,0 +1,30 @@
+[{
+  "_id": {
+    "$oid": "68cad86f1ba587658ffe0a0c"
+  },
+  "slug": "about",
+  "title": "About Tourismo",
+  "content": "Tourismo is your gateway to discovering breathtaking destinations around the world. We combine modern web technologies with crypto payments to make travel simple and secure.",
+  "createdAt": {
+    "$date": "2025-09-17T15:49:03.157Z"
+  },
+  "updatedAt": {
+    "$date": "2025-09-17T15:49:03.157Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68cad86f1ba587658ffe0a11"
+  },
+  "slug": "contact",
+  "title": "Contact Us",
+  "content": "Have questions or feedback? Reach out to our support team at \nkardi.abdossattar.2002@gmail.com",
+  "createdAt": {
+    "$date": "2025-09-17T15:49:03.384Z"
+  },
+  "updatedAt": {
+    "$date": "2025-09-23T00:37:40.258Z"
+  },
+  "__v": 0
+}]

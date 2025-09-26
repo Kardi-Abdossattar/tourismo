@@ -9,6 +9,9 @@ import { toast } from 'sonner';
 import AdminForm from '@/components/AdminForm';
 import { Plus, Edit, Trash2, Eye, LogOut } from 'lucide-react';
 import { AttractionFilters, FilterState } from '@/components/AttractionFilters';
+import DemoPopup from '@/components/DemoPopup';
+import { useDemoPopup } from '@/hooks/useDemoPopup';
+import { getTargets } from '@/lib/static-api';
 
 interface Target {
   _id: string;
@@ -43,6 +46,7 @@ export default function AdminDashboard() {
   });
   const perPage = 9;
   const router = useRouter();
+  const { isOpen, feature, description, showDemoPopup, closeDemoPopup } = useDemoPopup();
 
   useEffect(() => {
     checkAuth();
@@ -59,13 +63,7 @@ export default function AdminDashboard() {
   const fetchTargets = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5000/api/targets', {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-      const data = await response.json();
+      const data = await getTargets();
       
       // Handle both old format (array) and new format (object with targets)
       let targetsData: Target[] = [];
@@ -77,9 +75,10 @@ export default function AdminDashboard() {
       
       setAllTargets(targetsData);
       applyFilters(targetsData, filters);
+      toast.success('Demo data loaded successfully');
     } catch (error) {
       console.error('Error fetching targets:', error);
-      toast.error('Failed to fetch targets');
+      toast.error('Failed to fetch demo data');
     } finally {
       setLoading(false);
     }
@@ -161,32 +160,24 @@ export default function AdminDashboard() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this target?')) return;
-
-    try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:5000/api/targets/${id}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-
-      if (response.ok) {
-        toast.success('Target deleted successfully');
-        fetchTargets();
-      } else {
-        toast.error('Failed to delete target');
-      }
-    } catch (error) {
-      console.error('Delete error:', error);
-      toast.error('Failed to delete target');
-    }
+    showDemoPopup(
+      'Delete Destination',
+      'In the full version, this would permanently delete the destination from the database after confirmation. This demo showcases the admin interface without actual data modification.'
+    );
   };
 
   const handleEdit = (target: Target) => {
-    setEditingTarget(target);
-    setShowForm(true);
+    showDemoPopup(
+      'Edit Destination',
+      'In the full version, this would open an editable form allowing you to modify destination details, upload new images, and save changes to the database. This demo showcases the admin interface.'
+    );
+  };
+
+  const handleAdd = () => {
+    showDemoPopup(
+      'Add New Destination',
+      'In the full version, this would open a form to create new destinations with image uploads, detailed information, and database persistence. This demo showcases the admin interface.'
+    );
   };
 
   const handleFormSubmit = () => {
@@ -233,19 +224,18 @@ export default function AdminDashboard() {
                 </Button>
               </div>
               <Button
-                onClick={() => setShowForm(true)}
+                onClick={handleAdd}
                 size="sm"
                 className="bg-blue-600 hover:bg-blue-700 whitespace-nowrap min-h-[40px] w-full sm:w-auto"
               >
                 <Plus className="w-4 h-4 mr-2" />
-                <span className="hidden sm:inline">Add Target</span>
+                <span className="hidden sm:inline">Add Target (Demo)</span>
                 <span className="sm:hidden">Add</span>
               </Button>
             </div>
           </div>
           <div className="border-t border-gray-200"></div>
         </div>
-
         {/* Filters and Targets Layout */}
         <div className={`flex flex-col lg:flex-row gap-4 lg:gap-6 items-start transition-all duration-300 ${isFilterOpen ? '' : 'relative'}`}>
           {/* Advanced Filters - Left Side */}
@@ -370,6 +360,14 @@ export default function AdminDashboard() {
             }}
           />
         )}
+
+        {/* Demo Popup */}
+        <DemoPopup
+          isOpen={isOpen}
+          onClose={closeDemoPopup}
+          feature={feature}
+          description={description}
+        />
       </div>
     </div>
   );

@@ -1,0 +1,325 @@
+[{
+  "_id": {
+    "$oid": "68cade3a106bad2a00fbe9a5"
+  },
+  "title": "Jemaa el-Fnaa",
+  "description": "The famous square and marketplace in Marrakech.",
+  "price": 50,
+  "image": "https://www.lesjardinsdelamedina.com/blog/wp-content/uploads/2020/07/jama-el-fnaa.jpg",
+  "location": "Marrakech",
+  "rating": 4.8,
+  "country": "Morocco",
+  "updatedAt": {
+    "$date": "2025-09-24T21:29:59.707Z"
+  },
+  "heroImage": "https://www.lesjardinsdelamedina.com/blog/wp-content/uploads/2020/07/jama-el-fnaa.jpg",
+  "thumbnailImage": "https://dunesdeserts.com/wp-content/uploads/2019/01/Jmaalefna.jpg",
+  "whatsIncluded": []
+},
+{
+  "_id": {
+    "$oid": "68cade3a106bad2a00fbe9a6"
+  },
+  "title": "Chefchaouen",
+  "description": "The Blue City of Morocco, known for its blue-washed buildings.",
+  "price": 70,
+  "image": "https://usercontent.one/wp/www.desertmoroccoadventure.com/wp-content/uploads/2022/08/day-trip-from-Marrakech-to-Chefchaouen.jpg?media=1755526753",
+  "location": "Chefchaouen",
+  "rating": 4.9,
+  "updatedAt": {
+    "$date": "2025-09-24T21:35:46.285Z"
+  },
+  "country": "Morocco",
+  "heroImage": "https://travelmoroccotoday.com/wp-content/uploads/2024/03/Sunset-Chefchaoeun.jpg",
+  "thumbnailImage": "https://africa.iclei.org/wp-content/uploads/2023/09/Chefchaouen-1-scaled.jpg",
+  "whatsIncluded": []
+},
+{
+  "_id": {
+    "$oid": "68cade3a106bad2a00fbe9a7"
+  },
+  "title": "Sahara Desert",
+  "description": "Camel trekking and desert camping under the stars.",
+  "price": 150,
+  "image": "https://sevennaturalwonders.org/wp-content/uploads/2023/11/Sahara-Desert-sunset.jpg",
+  "location": "Merzouga",
+  "rating": 5,
+  "updatedAt": {
+    "$date": "2025-09-24T21:34:48.497Z"
+  },
+  "country": "Morocco",
+  "heroImage": "https://sevennaturalwonders.org/wp-content/uploads/2023/11/Sahara-Desert-sunset.jpg",
+  "thumbnailImage": "https://www.aljazeera.com/wp-content/uploads/2024/10/AP24281375166885-1728390559.jpg?resize=1920%2C1080",
+  "whatsIncluded": []
+},
+{
+  "_id": {
+    "$oid": "68cadf63106bad2a00fbe9a8"
+  },
+  "title": "Eiffel Tower",
+  "description": "Iconic iron tower offering city views and dining options.",
+  "price": 25,
+  "image": "https://hips.hearstapps.com/hmg-prod/images/paris-skyline-with-eiffel-tower-on-a-sunny-day-wide-royalty-free-image-1722542669.jpg?crop=1xw:0.84335xh;center,top&resize=1200:*",
+  "location": "Paris",
+  "rating": 4.7,
+  "updatedAt": {
+    "$date": "2025-09-24T21:33:15.971Z"
+  },
+  "country": "France",
+  "heroImage": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSVQlZHONM4AatbQJH7RGjWWmGHpwysj4Fp1Q&s",
+  "thumbnailImage": "https://th-thumbnailer.cdn-si-edu.com/3k5QmKi4lGewtdZbB44c35pu7jk=/1280x1280/https://tf-cmsv2-smithsonianmag-media.s3.amazonaws.com/filer/db/d6/dbd616d4-f52c-43cb-a9c2-4f77a5dcb2d3/eiffel-tower-night.jpg",
+  "whatsIncluded": []
+},
+{
+  "_id": {
+    "$oid": "68cadf63106bad2a00fbe9ac"
+  },
+  "title": "Taj Mahal",
+  "description": "White marble mausoleum and symbol of eternal love.",
+  "price": 15,
+  "image": "https://images.unsplash.com/photo-1564507592333-c60657eea523?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+  "location": "Agra",
+  "rating": 4.8,
+  "country": "India",
+  "updatedAt": {
+    "$date": "2025-09-24T21:33:59.221Z"
+  },
+  "heroImage": "https://static.wixstatic.com/media/055605_65e20a7fcbc54e2e8720adfc2544c35e~mv2.jpg/v1/fill/w_1800,h_1082,al_c,q_85/taj_new_contant_edited.jpg",
+  "thumbnailImage": "https://images.unsplash.com/photo-1564507592333-c60657eea523?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDE0fHx8ZW58MHx8fHx8",
+  "whatsIncluded": []
+},
+{
+  "_id": {
+    "$oid": "68cadf63106bad2a00fbe9ae"
+  },
+  "title": "Statue of Liberty",
+  "description": "Iconic symbol of freedom and democracy in New York Harbor.",
+  "price": 24,
+  "image": "https://m.media-amazon.com/images/I/717ojMd6TZL._UF894,1000_QL80_.jpg",
+  "location": "New York",
+  "rating": 4.6,
+  "updatedAt": {
+    "$date": "2025-09-22T13:52:31.475Z"
+  },
+  "country": "United States",
+  "smallImage": "https://cdn.britannica.com/82/183382-050-D832EC3A/Detail-head-crown-Statue-of-Liberty-New.jpg",
+  "whatsIncluded": [],
+  "heroImage": "https://www.statueofliberty.org/wp-content/uploads/2020/07/Liberty-from-ground-with-bright-blue-sky-2-1-scaled-e1595430911547.jpg",
+  "thumbnailImage": "https://m.media-amazon.com/images/I/717ojMd6TZL._UF894,1000_QL80_.jpg"
+},
+{
+  "_id": {
+    "$oid": "68cadf63106bad2a00fbe9b0"
+  },
+  "title": "Sydney Opera House",
+  "description": "Distinctive performing arts venue with guided tours.",
+  "price": 35,
+  "image": "https://images.unsplash.com/photo-1528072164453-f4e8ef0d475a?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+  "location": "Sydney",
+  "rating": 4.7,
+  "country": "Australia",
+  "updatedAt": {
+    "$date": "2025-09-24T21:32:14.720Z"
+  },
+  "heroImage": "https://ychef.files.bbci.co.uk/1280x720/p0gp95cq.jpg",
+  "thumbnailImage": "https://cdn-imgix.headout.com/tour/20072/TOUR-IMAGE/d85280d5-3c4f-4f54-bd7a-6fc5cc68597f-10732-sydney-sydney-and-bondi-tour-with-sydney-opera-house-tour-01.jpg?auto=format&w=1051.2&h=540&q=90&fit=fit",
+  "whatsIncluded": []
+},
+{
+  "_id": {
+    "$oid": "68cadf63106bad2a00fbe9b3"
+  },
+  "title": "Angkor Wat",
+  "description": "Vast temple complex and largest religious monument in the world.",
+  "price": 37,
+  "image": "https://cdn.britannica.com/56/122156-050-F5B469C8/overview-complex-Angkor-Wat-Cambodia.jpg",
+  "location": "Siem Reap",
+  "rating": 4.8,
+  "updatedAt": {
+    "$date": "2025-09-24T21:31:16.792Z"
+  },
+  "country": "Cambodia",
+  "heroImage": "https://cdn.britannica.com/49/94449-050-ECB0E7C2/Angkor-Wat-temple-complex-Cambodia.jpg",
+  "thumbnailImage": "https://cdn.britannica.com/56/122156-050-F5B469C8/overview-complex-Angkor-Wat-Cambodia.jpg",
+  "whatsIncluded": []
+},
+{
+  "_id": {
+    "$oid": "68cadf63106bad2a00fbe9b5"
+  },
+  "title": "Acropolis of Athens",
+  "description": "Ancient citadel containing remains of historic buildings.",
+  "price": 20,
+  "image": "https://cdn-imgix.headout.com/microbrands-banner-image/image/b698f96a3bf7e35418940973f33c4708-The%20Acropolis%20of%20Athens.jpeg",
+  "location": "Athens",
+  "rating": 4.7,
+  "updatedAt": {
+    "$date": "2025-09-24T21:30:34.886Z"
+  },
+  "country": "Greece",
+  "heroImage": "https://cdn.britannica.com/54/150954-050-F8D14782/Night-view-Parthenon-Athens.jpg",
+  "thumbnailImage": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Classic_view_of_Acropolis.jpg/1200px-Classic_view_of_Acropolis.jpg",
+  "whatsIncluded": []
+},
+{
+  "_id": {
+    "$oid": "68cadf63106bad2a00fbe9a9"
+  },
+  "title": "Colosseum",
+  "description": "Ancient Roman amphitheater with historical tours available.",
+  "price": 20,
+  "image": "https://cdn.britannica.com/36/162636-050-932C5D49/Colosseum-Rome-Italy.jpg",
+  "location": "Rome",
+  "rating": 4.8,
+  "updatedAt": {
+    "$date": "2025-09-24T20:05:57.688Z"
+  },
+  "country": "Italy",
+  "heroImage": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Colosseo_2020.jpg/1200px-Colosseo_2020.jpg",
+  "thumbnailImage": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Colosseum_in_Rome-April_2007-1-_copie_2B.jpg/500px-Colosseum_in_Rome-April_2007-1-_copie_2B.jpg",
+  "whatsIncluded": []
+},
+{
+  "_id": {
+    "$oid": "68cadf63106bad2a00fbe9af"
+  },
+  "title": "Christ the Redeemer",
+  "description": "Massive Art Deco statue of Jesus Christ overlooking Rio.",
+  "price": 20,
+  "image": "https://images.unsplash.com/photo-1516306580123-e6e52b1b7b5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+  "location": "Rio de Janeiro",
+  "rating": 4.8,
+  "country": "Brazil",
+  "updatedAt": {
+    "$date": "2025-09-24T20:15:50.037Z"
+  },
+  "heroImage": "https://cdn.britannica.com/54/150754-050-5B93A950/statue-Christ-the-Redeemer-Rio-de-Janeiro.jpg",
+  "thumbnailImage": "https://cdn.britannica.com/54/150754-050-5B93A950/statue-Christ-the-Redeemer-Rio-de-Janeiro.jpg",
+  "whatsIncluded": []
+},
+{
+  "_id": {
+    "$oid": "68cadf63106bad2a00fbe9b6"
+  },
+  "title": "Stonehenge",
+  "description": "Prehistoric monument of standing stones in circular formation.",
+  "price": 22,
+  "image": "https://images.immediate.co.uk/production/volatile/sites/7/2020/04/GettyImages-105955888-f1865bb.jpg",
+  "location": "Wiltshire",
+  "rating": 4.4,
+  "updatedAt": {
+    "$date": "2025-09-24T20:15:09.846Z"
+  },
+  "country": "United Kingdom",
+  "heroImage": "https://www.english-heritage.org.uk/siteassets/home/visit/places-to-visit/stonehenge/history/significance/stonehenge-from-north-east.jpg?w=1440&h=612&mode=crop&scale=both&quality=100&anchor=NoFocus&WebsiteVersion=20200219",
+  "thumbnailImage": "https://www.artnews.com/wp-content/uploads/2025/02/stonehenge2.jpg?w=2000",
+  "whatsIncluded": []
+},
+{
+  "_id": {
+    "$oid": "68cadf63106bad2a00fbe9ad"
+  },
+  "title": "Great Wall of China",
+  "description": "Series of fortifications built across historical northern borders.",
+  "price": 45,
+  "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/The_Great_Wall_of_China_at_Jinshanling-edit.jpg/1200px-The_Great_Wall_of_China_at_Jinshanling-edit.jpg",
+  "location": "Beijing",
+  "rating": 4.7,
+  "updatedAt": {
+    "$date": "2025-09-24T20:14:26.864Z"
+  },
+  "country": "China",
+  "heroImage": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/The_Great_Wall_of_China_at_Jinshanling-edit.jpg/1200px-The_Great_Wall_of_China_at_Jinshanling-edit.jpg",
+  "thumbnailImage": "https://cdn.britannica.com/89/179589-138-3EE27C94/Overview-Great-Wall-of-China.jpg?w=800&h=450&c=crop",
+  "whatsIncluded": []
+},
+{
+  "_id": {
+    "$oid": "68cadf63106bad2a00fbe9aa"
+  },
+  "title": "Sagrada Familia",
+  "description": "Gaudi's magnificent unfinished basilica in Barcelona.",
+  "price": 30,
+  "image": "https://cdn-imgix.headout.com/mircobrands-content/image/b299bd25f75c1e299c877fed458576fa-Sagrada%20Familia%20-%20Facades.jpg?auto=format&w=1222.3999999999999&h=687.6&q=90&ar=16%3A9&crop=faces&fit=crop",
+  "location": "Barcelona",
+  "rating": 4.9,
+  "updatedAt": {
+    "$date": "2025-09-24T20:13:44.912Z"
+  },
+  "country": "Spain",
+  "heroImage": "https://cdn-imgix.headout.com/mircobrands-content/image/b299bd25f75c1e299c877fed458576fa-Sagrada%20Familia%20-%20Facades.jpg?auto=format&w=1222.3999999999999&h=687.6&q=90&ar=16%3A9&crop=faces&fit=crop",
+  "whatsIncluded": [],
+  "thumbnailImage": "https://cdn-imgix.headout.com/mircobrands-content/image/b299bd25f75c1e299c877fed458576fa-Sagrada%20Familia%20-%20Facades.jpg?auto=format&w=1222.3999999999999&h=687.6&q=90&ar=16%3A9&crop=faces&fit=crop"
+},
+{
+  "_id": {
+    "$oid": "68cadf63106bad2a00fbe9ab"
+  },
+  "title": "Machu Picchu",
+  "description": "Ancient Incan citadel high in the Andes Mountains.",
+  "price": 60,
+  "image": "https://images.unsplash.com/photo-1587595431973-160d0d94add1?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+  "location": "Cusco",
+  "rating": 4.9,
+  "country": "Peru",
+  "updatedAt": {
+    "$date": "2025-09-24T20:12:05.329Z"
+  },
+  "heroImage": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQfQXpMvw4vNSfrfoT1X23PaOc9W7RLcN_1OA&s",
+  "thumbnailImage": "https://sacredsites.com/images/americas/peru/Machu-Picchu-main-shot-cropped.webp",
+  "whatsIncluded": []
+},
+{
+  "_id": {
+    "$oid": "68cadf63106bad2a00fbe9b1"
+  },
+  "title": "Pyramids of Giza",
+  "description": "Ancient Egyptian pyramids and Sphinx monument complex.",
+  "price": 40,
+  "image": "https://images.unsplash.com/photo-1503177119275-0aa32b3a9368?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+  "location": "Cairo",
+  "rating": 4.6,
+  "country": "Egypt",
+  "updatedAt": {
+    "$date": "2025-09-24T20:11:14.232Z"
+  },
+  "heroImage": "https://cdn-imgix.headout.com/media/images/e3e4b92772a00bf08922a79dd5a874d7-Giza.jpg",
+  "thumbnailImage": "https://www.worldhistory.org/img/r/p/500x600/5687.jpg?v=1752050527",
+  "whatsIncluded": []
+},
+{
+  "_id": {
+    "$oid": "68cadf63106bad2a00fbe9b2"
+  },
+  "title": "Grand Canyon",
+  "description": "Massive canyon offering breathtaking views and hiking trails.",
+  "price": 35,
+  "image": "https://images.unsplash.com/photo-1509316785289-025f5b846b35?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+  "location": "Arizona",
+  "rating": 4.9,
+  "country": "United States",
+  "updatedAt": {
+    "$date": "2025-09-24T20:09:47.457Z"
+  },
+  "heroImage": "https://upload.wikimedia.org/wikipedia/commons/a/aa/Dawn_on_the_S_rim_of_the_Grand_Canyon_%288645178272%29.jpg",
+  "thumbnailImage": "https://assets.milestoneinternet.com/cdn-cgi/image/f=auto/grand-canyon-plaza-hotel/grandcanyonplaza/site-images/home-page-images/things-to-do-slider/grand-canyon-national-park-in-grand-canyon-plaza-tusayan-arizona.jpg?width=616&height=640",
+  "whatsIncluded": []
+},
+{
+  "_id": {
+    "$oid": "68cadf63106bad2a00fbe9b4"
+  },
+  "title": "Petra",
+  "description": "Ancient Nabatean city carved into red sandstone cliffs.",
+  "price": 55,
+  "image": "https://cdn.britannica.com/88/189788-050-9B5DB3A4/Al-Dayr-Petra-Jordan.jpg",
+  "location": "Ma'an",
+  "rating": 4.7,
+  "updatedAt": {
+    "$date": "2025-09-24T20:08:25.192Z"
+  },
+  "country": "Jordan",
+  "heroImage": "https://res.cloudinary.com/ddjuftfy2/image/upload/f_webp,c_fill,q_auto/memphis/xlarge/184203755_Petra.jpg",
+  "thumbnailImage": "https://nohomejustroam.com/wp-content/uploads/2021/09/The-Treasury-Al-Khazneh-in-Petra.jpg",
+  "whatsIncluded": []
+}]

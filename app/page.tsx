@@ -6,10 +6,11 @@ import GridLayout from '@/components/GridLayout';
 import Navbar from '@/components/Navbar';
 import { Button } from '@/components/ui/button';
 import { MapPin, Globe, Star } from 'lucide-react';
-import { getTargets } from '@/lib/api';
+import { getTargets } from '@/lib/static-api';
 import { AttractionFilters, FilterState } from '@/components/AttractionFilters';
-import { isMetaMaskAvailable, ensureGanacheNetwork, connectWallet, sendEth } from '@/lib/web3';
 import { toast } from 'sonner';
+import DemoPopup from '@/components/DemoPopup';
+import { useDemoPopup } from '@/hooks/useDemoPopup';
 
 interface Target {
   _id: string;
@@ -41,6 +42,7 @@ export default function Home() {
   const [isAnyModalOpen, setIsAnyModalOpen] = useState(false);
   const perPage = 9;
   const destRef = useRef<HTMLDivElement | null>(null);
+  const { isOpen, feature, description, showDemoPopup, closeDemoPopup } = useDemoPopup();
 
   useEffect(() => {
     fetchTargets();
@@ -98,27 +100,11 @@ export default function Home() {
     await fetchTargets(apiParams);
   };
 
-  const handleTestPayment = async () => {
-    try {
-      const FIXED_RECEIVER = '0x2f5Be95f0D697d9b778540B010AfDB26c87C828F';
-      if (!/^0x[a-fA-F0-9]{40}$/.test(FIXED_RECEIVER)) {
-        toast.error('Configured receiver address is invalid. Please update it to a 42-character 0x... address.');
-        return;
-      }
-      if (!isMetaMaskAvailable()) {
-        toast.warning('MetaMask is not installed.');
-        return;
-      }
-      await ensureGanacheNetwork();
-      await connectWallet();
-      const tx = await sendEth(FIXED_RECEIVER, '0.01');
-      toast.message('Transaction sent', { description: tx.hash });
-      await tx.wait();
-      toast.success('Test payment confirmed');
-    } catch (e) {
-      console.error(e);
-      toast.error('Test payment failed');
-    }
+  const handleTestPayment = () => {
+    showDemoPopup(
+      'Blockchain Payment System',
+      'In the full version, this would connect to MetaMask, process ETH payments via smart contracts, and store transaction records on the blockchain. This demo showcases the UI/UX without actual blockchain integration.'
+    );
   };
 
   const handleModalStateChange = (isModalOpen: boolean) => {
@@ -279,6 +265,14 @@ export default function Home() {
           )}
         </div>
       </section>
+
+      {/* Demo Popup */}
+      <DemoPopup
+        isOpen={isOpen}
+        onClose={closeDemoPopup}
+        feature={feature}
+        description={description}
+      />
     </div>
   );
 }

@@ -6,43 +6,62 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { MapPin, Star, Calendar, Users, Wifi } from 'lucide-react';
 import Navbar from '@/components/Navbar';
+import DemoPopup from '@/components/DemoPopup';
+import { useDemoPopup } from '@/hooks/useDemoPopup';
+import { getTarget } from '@/lib/static-api';
 
 interface Target {
   _id: string;
+  id: string;
   title: string;
   description: string;
   price: number;
+  image: string;
   thumbnailImage?: string;
   heroImage: string;
   location: string;
   rating: number;
+  country: string;
   amenities: string[];
   whatsIncluded?: string[];
   duration: string;
+  updatedAt: string;
 }
 
 export default function TargetDetailClient({ initialTarget, id }: { initialTarget: Target; id: string }) {
   const [target, setTarget] = useState<Target>(initialTarget);
   const [loading, setLoading] = useState(false);
+  const { isOpen, feature, description, showDemoPopup, closeDemoPopup } = useDemoPopup();
 
   useEffect(() => {
-    // Refetch latest target to reflect dynamic updates (image, etc.)
+    // In static mode, we can still fetch fresh data from our static API
     const fetchLatest = async () => {
       try {
         setLoading(true);
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/targets/${id}`, { cache: 'no-store' });
-        if (res.ok) {
-          const fresh = await res.json();
-          setTarget(fresh);
-        }
+        const fresh = await getTarget(id);
+        // Add missing fields for compatibility
+        const updatedTarget: Target = {
+          ...fresh,
+          amenities: (fresh as any).amenities || ['WiFi', 'Parking', 'Restaurant', 'Tour Guide'],
+          duration: (fresh as any).duration || '1-3 days',
+        };
+        setTarget(updatedTarget);
       } catch (e) {
         // silent fail, keep initial
+        console.log('Using initial target data (static demo mode)');
       } finally {
         setLoading(false);
       }
     };
     fetchLatest();
   }, [id]);
+
+  const handleBooking = () => {
+    showDemoPopup(
+      'Booking System',
+      'In the full version, this would create a real reservation, process payments via blockchain, send confirmation emails, and manage availability calendars. This demo showcases the booking flow UI/UX.'
+    );
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -115,15 +134,27 @@ export default function TargetDetailClient({ initialTarget, id }: { initialTarge
                   </div>
                 </div>
 
-                <Button asChild className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 text-lg" size="lg">
-                  <Link href={`/booking/${target._id}`}>Book with MetaMask</Link>
+                <Button 
+                  onClick={handleBooking}
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 text-lg" 
+                  size="lg"
+                >
+                  Book with MetaMask
                 </Button>
-                <p className="text-sm text-gray-500 text-center mt-4">Secure payment with cryptocurrency</p>
+                <p className="text-sm text-gray-500 text-center mt-4">Secure payment with cryptocurrency (Demo)</p>
               </CardContent>
             </Card>
           </div>
         </div>
       </div>
+
+      {/* Demo Popup */}
+      <DemoPopup
+        isOpen={isOpen}
+        onClose={closeDemoPopup}
+        feature={feature}
+        description={description}
+      />
     </div>
   );
 }
