@@ -3,9 +3,12 @@ import { ExtendedTarget } from '@/types/target';
 
 export async function generateStaticParams() {
   try {
-    // Load static data for generating paths
-    const response = await fetch('http://localhost:3000/data/tourismo.targets.json');
-    const targets = await response.json();
+    // Load static data from file system during build
+    const fs = require('fs');
+    const path = require('path');
+    const filePath = path.join(process.cwd(), 'public', 'data', 'tourismo.targets.json');
+    const fileContents = fs.readFileSync(filePath, 'utf8');
+    const targets = JSON.parse(fileContents);
     return targets.map((t: any) => ({ 
       id: t._id?.$oid || t._id || t.id 
     }));
@@ -17,9 +20,12 @@ export async function generateStaticParams() {
 
 export default async function TargetDetailPage({ params }: { params: { id: string } }) {
   try {
-    // Load static data
-    const response = await fetch('http://localhost:3000/data/tourismo.targets.json');
-    const targetsData = await response.json();
+    // Load static data from file system
+    const fs = require('fs');
+    const path = require('path');
+    const filePath = path.join(process.cwd(), 'public', 'data', 'tourismo.targets.json');
+    const fileContents = fs.readFileSync(filePath, 'utf8');
+    const targetsData = JSON.parse(fileContents);
     
     // Find the target by ID
     const target = targetsData.find((t: any) => {
