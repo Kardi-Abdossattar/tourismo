@@ -11,19 +11,7 @@ import { AttractionFilters, FilterState } from '@/components/AttractionFilters';
 import { toast } from 'sonner';
 import DemoPopup from '@/components/DemoPopup';
 import { useDemoPopup } from '@/hooks/useDemoPopup';
-
-interface Target {
-  _id: string;
-  title: string;
-  description: string;
-  price: number;
-  image: string;
-  location: string;
-  country?: string;
-  rating: number;
-  featured?: boolean;
-  createdAt?: string;
-}
+import { Target } from '@/types/target';
 
 export default function Home() {
   const [targets, setTargets] = useState<Target[]>([]);

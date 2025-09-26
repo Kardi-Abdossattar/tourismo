@@ -12,20 +12,7 @@ import { AttractionFilters, FilterState } from '@/components/AttractionFilters';
 import DemoPopup from '@/components/DemoPopup';
 import { useDemoPopup } from '@/hooks/useDemoPopup';
 import { getTargets } from '@/lib/static-api';
-
-interface Target {
-  _id: string;
-  title: string;
-  description: string;
-  price: number;
-  image: string;
-  heroImage: string;
-  thumbnailImage?: string;
-  location: string;
-  rating: number;
-  country?: string;
-  whatsIncluded?: string[];
-}
+import { Target } from '@/types/target';
 
 export default function AdminDashboard() {
   const [targets, setTargets] = useState<Target[]>([]);

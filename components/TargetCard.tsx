@@ -3,23 +3,10 @@ import Link from 'next/link';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { MapPin, Star } from 'lucide-react';
+import { Target } from '@/types/target';
 
 interface TargetCardProps {
-  target: {
-    _id: string;
-    id: string;
-    title: string;
-    description: string;
-    price: number;
-    image: string;
-    heroImage: string;
-    thumbnailImage?: string;
-    location: string;
-    rating: number;
-    country: string;
-    whatsIncluded?: string[];
-    updatedAt?: string;
-  };
+  target: Target;
 }
 
 export default function TargetCard({ target }: TargetCardProps) {

@@ -1,22 +1,5 @@
 import TargetDetailClient from './TargetDetailClient';
-
-interface Target {
-  _id: string;
-  id: string;
-  title: string;
-  description: string;
-  price: number;
-  image: string;
-  heroImage: string;
-  thumbnailImage: string;
-  location: string;
-  rating: number;
-  country: string;
-  whatsIncluded: string[];
-  amenities: string[];
-  duration: string;
-  updatedAt: string;
-}
+import { ExtendedTarget } from '@/types/target';
 
 export async function generateStaticParams() {
   try {
@@ -57,7 +40,7 @@ export default async function TargetDetailPage({ params }: { params: { id: strin
     }
 
     // Transform the data to match expected format
-    const transformedTarget: Target = {
+    const transformedTarget: ExtendedTarget = {
       _id: target._id?.$oid || target._id || target.id,
       id: target._id?.$oid || target._id || target.id,
       title: target.title,

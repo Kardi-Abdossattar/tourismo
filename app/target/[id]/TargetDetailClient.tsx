@@ -9,27 +9,10 @@ import Navbar from '@/components/Navbar';
 import DemoPopup from '@/components/DemoPopup';
 import { useDemoPopup } from '@/hooks/useDemoPopup';
 import { getTarget } from '@/lib/static-api';
+import { ExtendedTarget } from '@/types/target';
 
-interface Target {
-  _id: string;
-  id: string;
-  title: string;
-  description: string;
-  price: number;
-  image: string;
-  thumbnailImage?: string;
-  heroImage: string;
-  location: string;
-  rating: number;
-  country: string;
-  amenities: string[];
-  whatsIncluded?: string[];
-  duration: string;
-  updatedAt: string;
-}
-
-export default function TargetDetailClient({ initialTarget, id }: { initialTarget: Target; id: string }) {
-  const [target, setTarget] = useState<Target>(initialTarget);
+export default function TargetDetailClient({ initialTarget, id }: { initialTarget: ExtendedTarget; id: string }) {
+  const [target, setTarget] = useState<ExtendedTarget>(initialTarget);
   const [loading, setLoading] = useState(false);
   const { isOpen, feature, description, showDemoPopup, closeDemoPopup } = useDemoPopup();
 
@@ -40,7 +23,7 @@ export default function TargetDetailClient({ initialTarget, id }: { initialTarge
         setLoading(true);
         const fresh = await getTarget(id);
         // Add missing fields for compatibility
-        const updatedTarget: Target = {
+        const updatedTarget: ExtendedTarget = {
           ...fresh,
           amenities: (fresh as any).amenities || ['WiFi', 'Parking', 'Restaurant', 'Tour Guide'],
           duration: (fresh as any).duration || '1-3 days',

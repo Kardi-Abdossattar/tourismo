@@ -1,20 +1,5 @@
 import TargetCard from './TargetCard';
-
-interface Target {
-  _id: string;
-  id: string;
-  title: string;
-  description: string;
-  price: number;
-  image: string;
-  heroImage: string;
-  thumbnailImage?: string;
-  location: string;
-  rating: number;
-  country: string;
-  whatsIncluded?: string[];
-  updatedAt?: string;
-}
+import { Target } from '@/types/target';
 
 interface GridLayoutProps {
   targets: Target[];
