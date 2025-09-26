@@ -2,23 +2,21 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [ main, master, static-demo ]
-  pull_request:
-    branches: [ main, master, static-demo ]
+    branches: [ static-demo ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
-    
-    permissions:
-      contents: read
-      pages: write
-      id-token: write
-    
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -29,20 +27,29 @@ jobs:
           node-version: '18'
           cache: 'npm'
           
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+        with:
+          static_site_generator: next
+          
       - name: Install dependencies
         run: npm ci
         
-      - name: Build application
+      - name: Build with Next.js
         run: npm run build
-        
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
         
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: './out'
-          
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
