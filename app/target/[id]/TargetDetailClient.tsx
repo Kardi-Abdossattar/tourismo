@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
+import type { } from '@/types/global';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -25,12 +26,28 @@ export default function TargetDetailClient({ initialTarget, id }: { initialTarge
   const [target, setTarget] = useState<Target>(initialTarget);
   const [loading, setLoading] = useState(false);
 
+  // Get API URL with fallback
+  const getApiUrl = () => {
+    // In the browser, use the value from public runtime config or fallback
+    if (typeof window !== 'undefined') {
+      return (window as any).__NEXT_DATA__.runtimeConfig?.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+    }
+    // In SSR, use environment variable or fallback
+    return process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+  };
+
   useEffect(() => {
     // Refetch latest target to reflect dynamic updates (image, etc.)
     const fetchLatest = async () => {
       try {
         setLoading(true);
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/targets/${id}`, { cache: 'no-store' });
+        const apiUrl = getApiUrl();
+        const res = await fetch(`${apiUrl}/api/targets/${id}`, { 
+          cache: 'no-store',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
         if (res.ok) {
           const fresh = await res.json();
           setTarget(fresh);

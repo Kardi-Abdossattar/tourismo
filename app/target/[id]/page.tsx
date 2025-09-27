@@ -1,37 +1,68 @@
 import TargetDetailClient from './TargetDetailClient';
+import getConfig from 'next/config';
 
 interface Target {
   _id: string;
   title: string;
   description: string;
   price: number;
-  image: string;
+  thumbnailImage?: string;
+  heroImage: string;
   location: string;
   rating: number;
   amenities: string[];
+  whatsIncluded?: string[];
   duration: string;
 }
 
-export async function generateStaticParams() {
-  try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/targets`);
-    const targets: Target[] = await res.json();
-    return targets.map((t) => ({ id: t._id }));
-  } catch (e) {
-    return [];
-  }
+interface PageProps {
+  params: { id: string };
 }
 
-export default async function TargetDetailPage({ params }: { params: { id: string } }) {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/targets/${params.id}`, { cache: 'force-cache' });
-  if (!res.ok) {
+export const dynamic = 'force-dynamic';
+
+function getApiUrl() {
+  // Get the public runtime config
+  const { publicRuntimeConfig } = getConfig();
+  
+  // In the browser, use the value from publicRuntimeConfig or fallback
+  if (typeof window !== 'undefined') {
+    return publicRuntimeConfig.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+  }
+  
+  // On the server, use environment variable or fallback
+  return process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+}
+
+export default async function TargetDetailPage({ params }: PageProps) {
+  const apiUrl = getApiUrl();
+  
+  try {
+    console.log(`Fetching from: ${apiUrl}/api/targets/${params.id}`);
+    
+    const res = await fetch(`${apiUrl}/api/targets/${params.id}`, {
+      cache: 'no-store',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    
+    if (!res.ok) {
+      throw new Error(`Failed to fetch target: ${res.status} ${res.statusText}`);
+    }
+    
+    const target: Target = await res.json();
+    return <TargetDetailClient initialTarget={target} id={params.id} />;
+  } catch (error) {
+    console.error('Error loading target:', error);
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p className="text-xl text-gray-600">Target not found</p>
+        <div className="text-center">
+          <h1 className="text-2xl font-bold mb-2">Error loading target</h1>
+          <p className="text-gray-600">The requested target could not be loaded. Please try again later.</p>
+          <p className="mt-2 text-sm text-red-500">API URL: {apiUrl}</p>
+        </div>
       </div>
     );
   }
-  const target: Target = await res.json();
-
-  return <TargetDetailClient initialTarget={target} id={params.id} />;
 }

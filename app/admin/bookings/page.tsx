@@ -31,7 +31,7 @@ interface PaymentStatus {
 
 export default function AdminBookingsPage() {
   const router = useRouter();
-  const [bookings, setBookings] = useState<Booking[]>([]);
+  const [bookings, setBookings] = useState<Booking[]>([]); // Initialize as empty array
   const [loading, setLoading] = useState(true);
   const [statuses, setStatuses] = useState<Record<string, PaymentStatus | null>>({});
 
@@ -48,16 +48,42 @@ export default function AdminBookingsPage() {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch('http://localhost:5000/api/bookings', {
-        headers: { Authorization: `Bearer ${token}` },
+      if (!token) {
+        router.push('/admin/login');
+        return;
+      }
+
+      const res = await fetch('http://localhost:5000/api/bookings/', {
+        headers: { 
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include' // Important for cookies if using httpOnly
       });
-      const data: Booking[] = await res.json();
+
+      if (!res.ok) {
+        if (res.status === 401) {
+          // Token is invalid or expired, redirect to login
+          localStorage.removeItem('token');
+          router.push('/admin/login');
+          return;
+        }
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+
+      const data = await res.json();
+      if (!Array.isArray(data)) {
+        console.error('Expected array but got:', data);
+        setBookings([]);
+        return;
+      }
+      
       setBookings(data);
 
       // fetch on-chain status for those with bookingId
       const statusEntries: Record<string, PaymentStatus | null> = {};
       await Promise.all(
-        data.map(async (b) => {
+        data.map(async (b: Booking) => {
           if (typeof b.bookingId === 'number') {
             try {
               const sres = await fetch(`http://localhost:5000/api/payment/status/${b.bookingId}`);
@@ -73,8 +99,9 @@ export default function AdminBookingsPage() {
       );
       setStatuses(statusEntries);
     } catch (e) {
-      // eslint-disable-next-line no-console
       console.error('Failed to fetch bookings', e);
+      // Set to empty array on error to prevent mapping issues
+      setBookings([]);
     } finally {
       setLoading(false);
     }
@@ -100,7 +127,13 @@ export default function AdminBookingsPage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {bookings.map((b) => {
+{bookings.length === 0 ? (
+            <div className="col-span-full text-center py-12">
+              <h3 className="text-lg font-medium text-gray-700">No bookings found</h3>
+              <p className="mt-2 text-gray-500">When bookings are made, they will appear here.</p>
+            </div>
+          ) : (
+            bookings.map((b) => {
             const status = statuses[b._id];
             const paid = status?.paid || b.paid;
             return (
@@ -132,7 +165,7 @@ export default function AdminBookingsPage() {
                 </CardContent>
               </Card>
             );
-          })}
+          }))}
         </div>
       </div>
     </div>

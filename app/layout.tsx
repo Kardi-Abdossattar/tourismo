@@ -12,6 +12,29 @@ export const metadata: Metadata = {
   description: 'Book amazing travel destinations with crypto payments',
 };
 
+// This component makes runtime configuration available to the client
+function ClientRuntimeConfig() {
+  const config = {
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000',
+  };
+
+  return (
+    <script
+      id="__NEXT_DATA__"
+      type="application/json"
+      dangerouslySetInnerHTML={{
+        __html: JSON.stringify({
+          props: {},
+          page: '/',
+          query: {},
+          buildId: process.env.NEXT_PUBLIC_BUILD_ID || 'development',
+          runtimeConfig: config,
+        }),
+      }}
+    />
+  );
+}
+
 export default function RootLayout({
   children,
 }: {
@@ -20,6 +43,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
+        <ClientRuntimeConfig />
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
           <main className="min-h-screen">
             {children}

@@ -1,31 +1,59 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, FormEvent } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
-import { Lock, User } from 'lucide-react';
+import { Lock, User, Loader2 } from 'lucide-react';
 
 export default function AdminLogin() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get('from') || '/admin/dashboard';
 
-  useEffect(() => {
-    // If already logged in, redirect to dashboard
-    const token = localStorage.getItem('token');
-    if (token) {
-      router.push('/admin/dashboard');
+  // Get API URL with fallback
+  const getApiUrl = () => {
+    if (typeof window !== 'undefined') {
+      return (window as any).__NEXT_DATA__?.runtimeConfig?.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
     }
-  }, [router]);
+    return process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+  };
 
-  const handleLogin = async (e: React.FormEvent) => {
+  useEffect(() => {
+    // This code runs only on the client side
+    const checkAuth = () => {
+      // Check both localStorage and cookies
+      const token = localStorage.getItem('token') || 
+                   document.cookie.split('; ').find(row => row.startsWith('adminToken='))?.split('=')[1];
+      
+      if (token) {
+        // Ensure the token is in both places for consistency
+        localStorage.setItem('token', token);
+        document.cookie = `adminToken=${token}; path=/; max-age=86400; samesite=lax`;
+        
+        setIsAuthenticated(true);
+        router.replace(redirectTo);
+      } else {
+        setLoading(false);
+      }
+    };
+
+    // Only run on client side
+    if (typeof window !== 'undefined') {
+      checkAuth();
+    } else {
+      setLoading(false);
+    }
+  }, [redirectTo, router]);
+
+  const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     
     if (!username || !password) {
@@ -36,32 +64,65 @@ export default function AdminLogin() {
     setLoading(true);
     
     try {
-      const response = await fetch('http://localhost:5000/api/auth/login', {
+      const apiUrl = getApiUrl();
+      console.log('Logging in to:', `${apiUrl}/api/auth/login`);
+      
+      const response = await fetch(`${apiUrl.trim()}/api/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Accept': 'application/json',
         },
         body: JSON.stringify({ username, password }),
-        credentials: 'include', // Important for cookies
+        credentials: 'include',
+        mode: 'cors',
       });
 
       const data = await response.json();
+      console.log('Login response:', { status: response.status, data });
 
-      if (response.ok) {
+      if (response.ok && data.token) {
+        // Store the token in both localStorage and cookies
+        localStorage.setItem('token', data.token);
+        
+        // Set the token in cookies for server-side auth (middleware)
+        document.cookie = `adminToken=${data.token}; path=/; max-age=86400; samesite=lax`;
+        
+        setIsAuthenticated(true);
         toast.success('Login successful!');
-        // The server should set an HTTP-only cookie
-        // Redirect to the dashboard or the originally requested page
-        window.location.href = redirectTo;
+        router.replace(redirectTo);
       } else {
-        toast.error(data.message || 'Login failed. Please check your credentials.');
+        const errorMessage = data.message || 'Login failed. Please check your credentials.';
+        console.error('Login failed:', errorMessage);
+        toast.error(errorMessage);
       }
     } catch (error) {
-      console.error('Login error:', error);
-      toast.error('Login failed. Please try again.');
+      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+      console.error('Login error:', errorMessage);
+      toast.error('Connection error. Please check your network and try again.');
     } finally {
       setLoading(false);
     }
   };
+
+  if (typeof window === 'undefined' || loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+        <Loader2 className="h-12 w-12 animate-spin text-blue-600" />
+      </div>
+    );
+  }
+
+  if (isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="h-12 w-12 animate-spin text-blue-600 mx-auto mb-4" />
+          <p className="text-gray-700">Redirecting to dashboard...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center px-4">
